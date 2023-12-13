@@ -18,15 +18,76 @@ This thesis will investigate which languages would be the best choice for script
 \section{State of the art}%
 \label{sec:state-of-the-art}
 
-Hier beschrijf je de \emph{state-of-the-art} rondom je gekozen onderzoeksdomein, d.w.z.\ een inleidende, doorlopende tekst over het onderzoeksdomein van je bachelorproef. Je steunt daarbij heel sterk op de professionele \emph{vakliteratuur}, en niet zozeer op populariserende teksten voor een breed publiek. Wat is de huidige stand van zaken in dit domein, en wat zijn nog eventuele open vragen (die misschien de aanleiding waren tot je onderzoeksvraag!)?
+\subsection{Similar services}
 
-Je mag de titel van deze sectie ook aanpassen (literatuurstudie, stand van zaken, enz.). Zijn er al gelijkaardige onderzoeken gevoerd? Wat concluderen ze? Wat is het verschil met jouw onderzoek?
+\subsubsection{Cloudflare Workers}
 
-Verwijs bij elke introductie van een term of bewering over het domein naar de vakliteratuur, bijvoorbeeld~\autocite{Hykes2013}! Denk zeker goed na welke werken je refereert en waarom.
+\subsubsection{Auth0 Actions}
 
-Draag zorg voor correcte literatuurverwijzingen! Een bronvermelding hoort thuis \emph{binnen} de zin waar je je op die bron baseert, dus niet er buiten! Maak meteen een verwijzing als je gebruik maakt van een bron. Doe dit dus \emph{niet} aan het einde van een lange paragraaf. Baseer nooit teveel aansluitende tekst op eenzelfde bron.
+\subsection{Server-side languages}
 
-Als je informatie over bronnen verzamelt in JabRef, zorg er dan voor dat alle nodige info aanwezig is om de bron terug te vinden (zoals uitvoerig besproken in de lessen Research Methods).
+To determine possibly suitable programming languages, surveys may provide useful data to determine the currently most popular ones. The Stack Overflow Developer Survey 2023 \autocite{StackOverflow2023} and The State of Developer Ecosystem 2023 \autocite{JetBrains2023} each provide statistics on programming language popularity. Based on these results, the ten most popular Server-side programming languages are JavaScript, Python, Java, C++, C\#, C, PHP, Go, Kotlin, and Rust.
+
+\subsubsection{JavaScript}
+In both surveys, JavaScript proves to be the most widely used programming language across developers. Despite having originally been created for usage in browsers \autocite{NCC1995}, it can also be used in server-side environments on runtime systems such as Node.js \autocite{OpenJSFoundation}.
+
+\subsubsection{Python}
+
+\subsubsection{Java}
+
+\subsubsection{C and C++}
+
+\subsubsection{C$\#$}
+
+\subsubsection{Rust}
+
+\subsubsection{Go}
+
+\subsubsection{WebAssembly}
+
+\subsection{IAM standards}
+To gain a deeper understanding of the problem space, it is important to briefly discuss the dominant IAM technologies. According to \textcite{Naik2016}, the most established identity protocols in the cloud computing industry are the following three: Security Assertion Markup Language (SAML), OAuth, and OpenID Connect (OIDC). 
+
+\subsubsection{SAML}
+
+\subsubsection{OAuth}
+
+
+``The OAuth 2.0 authorization framework enables a third-party
+application to obtain limited access to an HTTP service, either on
+behalf of a resource owner [...], or [...] on its own behalf.'' \autocite{Hardt2023}
+
+
+A typical OAuth flow consists of a client (e.g. an application) requesting authorization from a resource owner. When the resource owner issues an authorization grant to the client, it may then exchange that authorization grant for an access token from an authorization server. Using that access token, it may then access a protected resource, owned by the resource owner, on the resource server. \autocite{Hardt2023}
+\begin{figure}[h]
+\begin{scriptsize}
+\begin{verbatim} 
++--------+                               +---------------+
+|        |--(A)- Authorization Request ->|   Resource    |
+|        |                               |     Owner     |
+|        |<-(B)-- Authorization Grant ---|               |
+|        |                               +---------------+
+|        |
+|        |                               +---------------+
+|        |--(C)-- Authorization Grant -->| Authorization |
+| Client |                               |     Server    |
+|        |<-(D)----- Access Token -------|               |
+|        |                               +---------------+
+|        |
+|        |                               +---------------+
+|        |--(E)----- Access Token ------>|    Resource   |
+|        |                               |     Server    |
+|        |<-(F)--- Protected Resource ---|               |
++--------+                               +---------------+
+\end{verbatim}
+\end{scriptsize}
+\caption{Abstract Protocol Flow \autocite{Hardt2023}}
+\end{figure}
+
+A JSON Web Token (JWT) may be used as both as OAuth 2.0 authentication grants and tokens \autocite{Jones2015a, Bertocci2021}. It provides a secure way to communicate information about a subject (referred to as claims), encoded as a JSON object which may be signed and/or encrypted. \autocite{Jones2015}
+
+\subsubsection{OpenID Connect}
+As detailed by its specification, OpenID Connect (OIDC) is ``a simple identity layer on top of the OAuth 2.0 protocol''. Information about the end user is conveyed in claims, as part of a JWT called an ID token. This information can then be used by a client to authenticate the user. \autocite{Sakimura2014} 
 
 % Voor literatuurverwijzingen zijn er twee belangrijke commando's:
 % \autocite{KEY} => (Auteur, jaartal) Gebruik dit als de naam van de auteur
@@ -34,8 +95,6 @@ Als je informatie over bronnen verzamelt in JabRef, zorg er dan voor dat alle no
 % \textcite{KEY} => Auteur (jaartal)  Gebruik dit als de auteursnaam wel een
 %   functie heeft in de zin (bv. ``Uit onderzoek door Doll & Hill (1954) bleek
 %   ...'')
-
-Je mag deze sectie nog verder onderverdelen in subsecties als dit de structuur van de tekst kan verduidelijken.
 
 %---------- Methodologie ------------------------------------------------------
 \section{Methodology}%
