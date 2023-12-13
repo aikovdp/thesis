@@ -3,22 +3,15 @@
 \section{Introduction}%
 \label{sec:introduction}
 
-Waarover zal je bachelorproef gaan? Introduceer het thema en zorg dat volgende zaken zeker duidelijk aanwezig zijn:
+This research proposal is written based on a business case of TrustBuilder, a European company providing Identity and Access Management (IAM) solutions for organizations across Europe, with extensive customization capabilities to satisfy client-specific needs.
 
-\begin{itemize}
-  \item kaderen thema
-  \item de doelgroep
-  \item de probleemstelling en (centrale) onderzoeksvraag
-  \item de onderzoeksdoelstelling
-\end{itemize}
+Their product, also named TrustBuilder, is platform that aims to be able to handle any IAM need, such as authentication, session management, authorization, and user management. Further requirements can take many forms, and the TrustBuilder platform needs to be able to tightly integrate with each client’s user-facing applications and other services. As these needs may differ from application to application, not everything can be a native part of the IAM system, and customization capabilities are a must. In order to satisfy these needs, their clients need to be able to to customize and extend their platform using custom code.
 
-Denk er aan: een typische bachelorproef is \textit{toegepast onderzoek}, wat betekent dat je start vanuit een concrete probleemsituatie in bedrijfscontext, een \textbf{casus}. Het is belangrijk om je onderwerp goed af te bakenen: je gaat voor die \textit{ene specifieke probleemsituatie} op zoek naar een goede oplossing, op basis van de huidige kennis in het vakgebied.
+To tackle this problem, TrustBuilder allows for the creation of “workflows”. These workflows consist of simple building blocks such as “script blocks”, “adapters” and “services”, using arrow connectors and “condition” blocks between them for control flow. Script blocks can run custom JavaScript functions, allowing workflows to be used to implement virtually any functionality missing from the base product, as well as integrate with the base product directly.
 
-De doelgroep moet ook concreet en duidelijk zijn, dus geen algemene of vaag gedefinieerde groepen zoals \emph{bedrijven}, \emph{developers}, \emph{Vlamingen}, enz. Je richt je in elk geval op it-professionals, een bachelorproef is geen populariserende tekst. Eén specifiek bedrijf (die te maken hebben met een concrete probleemsituatie) is dus beter dan \emph{bedrijven} in het algemeen.
+TrustBuilder wants to overhaul their workflow platform to improve the developer experience and maintainability of workflows. Therefore, they want to know what language(s) their workflow platform should be built around.
 
-Formuleer duidelijk de onderzoeksvraag! De begeleiders lezen nog steeds te veel voorstellen waarin we geen onderzoeksvraag terugvinden.
-
-Schrijf ook iets over de doelstelling. Wat zie je als het concrete eindresultaat van je onderzoek, naast de uitgeschreven scriptie? Is het een proof-of-concept, een rapport met aanbevelingen, \ldots Met welk eindresultaat kan je je bachelorproef als een succes beschouwen?
+This thesis will investigate which languages would be the best choice for scripting extensions and customizations for IAM-platforms. A primary language choice based on the performed research and a proof of concept showcasing the language’s suitability for IAM-related tasks will allow TrustBuilder to start the overhaul of workflows with certainty.
 
 %---------- Stand van zaken ---------------------------------------------------
 
