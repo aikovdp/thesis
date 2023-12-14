@@ -55,8 +55,7 @@ The use of SAML 2.0 can support single sign-on (SSO) of browsers, as specified b
 \subsubsection{OAuth}
 ``The OAuth 2.0 authorization framework enables a third-party
 application to obtain limited access to an HTTP service, either on
-behalf of a resource owner [...], or [...] on its own behalf.'' \autocite{Hardt2023}
-
+behalf of a resource owner [...], or [...] on its own behalf'' \autocite{Hardt2023}.
 
 A typical OAuth flow consists of a \emph{client} (e.g. an application) requesting authorization from a \emph{resource owner}. When the resource owner issues an \emph{authorization grant} to the client, it may then exchange that authorization grant for an \emph{access token} from an authorization server. Using that access token, it may then access a protected resource, owned by the resource owner, on the resource server. \autocite{Hardt2023}
 \begin{figure}[h]
@@ -89,12 +88,6 @@ A JSON Web Token (JWT) may be used as both as OAuth 2.0 authentication grants an
 \subsubsection{OpenID Connect}
 As detailed by its specification, OpenID Connect (OIDC) is ``a simple identity layer on top of the OAuth 2.0 protocol''. Information about the end user is conveyed in claims, as part of a JWT called an ID token. This information can then be used by a client to authenticate the user. \autocite{Sakimura2014} 
 
-% Voor literatuurverwijzingen zijn er twee belangrijke commando's:
-% \autocite{KEY} => (Auteur, jaartal) Gebruik dit als de naam van de auteur
-%   geen onderdeel is van de zin.
-% \textcite{KEY} => Auteur (jaartal)  Gebruik dit als de auteursnaam wel een
-%   functie heeft in de zin (bv. ``Uit onderzoek door Doll & Hill (1954) bleek
-%   ...'')
 
 %---------- Methodologie ------------------------------------------------------
 \section{Methodology}%
