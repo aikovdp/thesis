@@ -11,39 +11,35 @@ To tackle this problem, TrustBuilder allows for the creation of “workflows”.
 
 TrustBuilder wants to overhaul their workflow platform to improve the developer experience and maintainability of workflows. Therefore, they want to know what language(s) their workflow platform should be built around.
 
-This thesis will investigate which languages would be the best choice for scripting extensions and customizations for IAM-platforms. A primary language choice based on the performed research and a proof of concept showcasing the language’s suitability for IAM-related tasks will allow TrustBuilder to start the overhaul of workflows with certainty.
+This thesis will investigate which languages would be the best choice for scripting extensions and customizations for IAM platforms. A primary language choice based on the performed research and a proof of concept showcasing the language’s suitability for IAM-related tasks will allow TrustBuilder to start the overhaul of workflows with certainty.
 
 %---------- Stand van zaken ---------------------------------------------------
 
 \section{State of the art}%
 \label{sec:state-of-the-art}
 
-\subsection{Similar services}
+\subsection{Comparable services}
+\subsubsection{Auth0 Actions}
+Auth0 is an IAM platform that enables developers to add authentication and authorization services to their applications \autocite{Auth0Overview}. Actions, one of their customization capabilities, let customers ``customize and extend Auth0's capabilities with custom logic'' \autocite{Auth0Actions}. Auth0 Actions are Node.JS JavaScript functions which can be executed at specific points in identity flows.
 
 \subsubsection{Cloudflare Workers}
-
-\subsubsection{Auth0 Actions}
+A more general-purpose example, Cloudflare Workers, announced by Kenton \textcite{Varda2017}, were created to allow their customers to run code on Cloudflare's edge network, to cover use cases Cloudflare themselves can't. A Cloudflare Worker could initially only be written in JavaScript, but can now run code written in any language that compiles to JavaScript (such as TypeScript, Python, and Kotlin) or WebAssembly (such as C, C++, Rust and Go). \autocite{Varda2018, Koeninger2020}
 
 \subsection{Server-side languages}
+To determine possibly suitable programming languages, surveys may provide useful data to determine the currently most popular ones. The Stack Overflow Developer Survey 2023 \autocite{StackOverflow2023} and The State of Developer Ecosystem 2023 \autocite{JetBrains2023} each provide statistics on programming language popularity. Based on these results, the four most popular Server-side programming languages are JavaScript, Python, Java, and TypeScript. Further popular languages include   C C++, C\#, PHP, Go, Kotlin, and Rust.
 
-To determine possibly suitable programming languages, surveys may provide useful data to determine the currently most popular ones. The Stack Overflow Developer Survey 2023 \autocite{StackOverflow2023} and The State of Developer Ecosystem 2023 \autocite{JetBrains2023} each provide statistics on programming language popularity. Based on these results, the ten most popular Server-side programming languages are JavaScript, Python, Java, C++, C\#, C, PHP, Go, Kotlin, and Rust.
-
-\subsubsection{JavaScript}
+\subsubsection{JavaScript and TypeScript}
 In both surveys, JavaScript proves to be the most widely used programming language across developers. Despite having originally been created for usage in browsers \autocite{NCC1995}, it can also be used in server-side environments on runtime systems such as Node.js \autocite{OpenJSFoundation}.
+
+According to the TypeScript Handbook, TypeScript is a typed superset of JavaScript \autocite{TypeScript2023}. Its compiler checks code for type errors, and will then produce plain JavaScript code. This allows the compiled code to be run in any JS runtime environment.
 
 \subsubsection{Python}
 
 \subsubsection{Java}
-
-\subsubsection{C and C++}
-
-\subsubsection{C$\#$}
-
-\subsubsection{Rust}
-
-\subsubsection{Go}
+Java is a general-purpose object-oriented programming language \autocite{Lindholm2015}. A Java application may be compiled to instructions for the Java Virtual Machine (JVM), which allows the language to be hardware- and operating system-independent. Other popular JVM languages include Kotlin and Scala \autocite{StackOverflow2023, JetBrains2023}.
 
 \subsubsection{WebAssembly}
+As stated on its home page, ``WebAssembly (abbreviated Wasm) is a binary instruction format [...] designed as a portable compilation target for programming languages, enabling deployment on the web for client and server applications'' \autocite{WebAssembly}. Although it is not a programming language itself, a runtime environment that can run Wasm applications would be able to run applications written in a variety of languages.
 
 \subsection{IAM standards}
 To gain a deeper understanding of the problem space, it is important to briefly discuss the dominant IAM technologies. According to \textcite{Naik2016}, the most established identity protocols in the cloud computing industry are the following three: Security Assertion Markup Language (SAML), OAuth, and OpenID Connect (OIDC). 
