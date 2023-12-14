@@ -45,16 +45,17 @@ As stated on its home page, ``WebAssembly (abbreviated Wasm) is a binary instruc
 To gain a deeper understanding of the problem space, it is important to briefly discuss the dominant IAM technologies. According to \textcite{Naik2016}, the most established identity protocols in the cloud computing industry are the following three: Security Assertion Markup Language (SAML), OAuth, and OpenID Connect (OIDC). 
 
 \subsubsection{SAML}
+Security Assertion Markup Language (SAML) and its associated protocols form an open standard for communicating information, ``packaged'' in an \emph{assertion}, about a subject, such as a user \autocite{Kemp2005}. SAML assertions, provided by an \emph{identity provider}, may represent authentication information, authorization decisions, or attributes associated with the subject. A \emph{service provider} can then use these assertions for access control and identification.
+
+The use of SAML 2.0 can support single sign-on (SSO) of browsers, as specified by the Web Browser SSO Profile \autocite{Hughes2005}. When an unauthenticated HTTP user agent, in this case a browser, requests a secured resource from a service provider, the service provider issues a SAML authentication request to be delivered to the identity provider by the user agent. The identity provider identifies the subject, and issues a SAML response to be delivered to the service provider by the user agent. The service provider can then establish a security context for the subject and return the requested resource. 
 
 \subsubsection{OAuth}
-
-
 ``The OAuth 2.0 authorization framework enables a third-party
 application to obtain limited access to an HTTP service, either on
 behalf of a resource owner [...], or [...] on its own behalf.'' \autocite{Hardt2023}
 
 
-A typical OAuth flow consists of a client (e.g. an application) requesting authorization from a resource owner. When the resource owner issues an authorization grant to the client, it may then exchange that authorization grant for an access token from an authorization server. Using that access token, it may then access a protected resource, owned by the resource owner, on the resource server. \autocite{Hardt2023}
+A typical OAuth flow consists of a \emph{client} (e.g. an application) requesting authorization from a \emph{resource owner}. When the resource owner issues an \emph{authorization grant} to the client, it may then exchange that authorization grant for an \emph{access token} from an authorization server. Using that access token, it may then access a protected resource, owned by the resource owner, on the resource server. \autocite{Hardt2023}
 \begin{figure}[h]
 \begin{scriptsize}
 \begin{verbatim} 
