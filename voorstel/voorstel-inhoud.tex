@@ -5,9 +5,9 @@
 
 This research proposal is written based on a business case from TrustBuilder, a European company providing Identity and Access Management (IAM) solutions for organizations across Europe, with extensive customization capabilities to satisfy client-specific needs.
 
-Their product, also named TrustBuilder, is a platform that aims to be able to handle any IAM need, such as authentication, session management, authorization, and user management. Further requirements can take many forms, and the TrustBuilder platform needs to be able to tightly integrate with each client’s user-facing applications and other services. As these needs may differ from application to application, not everything can be a native part of the IAM system, and customization capabilities are a must. In order to satisfy these needs, their clients need to be able to to customize and extend their platform using custom code.
+Their product, also named TrustBuilder, is a platform that aims to be able to handle any IAM need, such as authentication, session management, authorization, and user management. Further requirements can take many forms, and the TrustBuilder platform needs to be able to tightly integrate with each client’s user-facing applications and other services. As these needs may differ from application to application, not everything can be a native part of the IAM system, and customization capabilities are a must. To satisfy these needs, their clients need to be able to to customize and extend their platform using custom code.
 
-To tackle this problem, TrustBuilder allows for the creation of \emph{workflows}. These workflows consist of simple building blocks such as \emph{script blocks}, \emph{adapters} and \emph{services}, using arrow connectors and \emph{condition blocks} between them for control flow. Script blocks can run custom JavaScript functions, allowing workflows to be used to implement virtually any functionality missing from the base product, as well as interface with the base product directly.
+TrustBuilder tackles this problem by allowing for the creation of \emph{workflows}. These workflows consist of simple building blocks such as \emph{script blocks}, \emph{adapters} and \emph{services}, using arrow connectors and \emph{condition blocks} between them for control flow. Script blocks can run custom JavaScript functions, allowing workflows to be used to implement virtually any functionality missing from the base product, as well as interface with the base product directly.
 
 TrustBuilder wants to overhaul their workflow platform to improve the developer experience and maintainability of workflows. Therefore, they want to know what language(s) their workflow platform should be built around.
 
@@ -26,7 +26,7 @@ Auth0 is an IAM platform that enables developers to add authentication and autho
 A more general-purpose example, Cloudflare Workers, announced by Kenton \textcite{Varda2017}, were created to allow customers to run code on Cloudflare's edge network, to cover use cases Cloudflare themselves can't. A Cloudflare Worker could initially only be written in JavaScript, but can now run code written in any language that compiles to JavaScript (such as TypeScript, Python, and Kotlin) or WebAssembly (such as C, C++, Rust and Go). \autocite{Varda2018, Koeninger2020}
 
 \subsection{Server-side languages}
-To determine possibly suitable programming languages, surveys may provide useful data to determine the currently most popular ones. The Stack Overflow Developer Survey 2023 \autocite{StackOverflow2023} and The State of Developer Ecosystem 2023 \autocite{JetBrains2023} each provide statistics on programming language popularity. Based on these results, the four most popular Server-side programming languages are JavaScript, Python, Java, and TypeScript. Further popular languages include   C C++, C\#, PHP, Go, Kotlin, and Rust.
+To determine possibly suitable programming languages, surveys may provide useful data to determine the currently most popular ones. The Stack Overflow Developer Survey 2023 \autocite{StackOverflow2023} and The State of Developer Ecosystem 2023 \autocite{JetBrains2023} each provide statistics on programming language popularity. Based on these results, the four most popular server-side programming languages are JavaScript, Python, Java, and TypeScript. Further popular languages include   C C++, C\#, PHP, Go, Kotlin, and Rust.
 
 \subsubsection{JavaScript and TypeScript}
 In both surveys, JavaScript proves to be the most widely used programming language across developers. Despite having originally been created for usage in browsers \autocite{NCC1995}, it can also be used in server-side environments on runtime systems such as Node.js \autocite{OpenJSFoundation}.
@@ -48,9 +48,9 @@ As stated on its home page, ``WebAssembly (abbreviated Wasm) is a binary instruc
 To gain a deeper understanding of the problem space, it is important to briefly discuss the dominant IAM technologies. According to \textcite{Naik2016}, the most established identity protocols in the cloud computing industry are the following three: Security Assertion Markup Language (SAML), OAuth, and OpenID Connect (OIDC). 
 
 \subsubsection{SAML}
-Security Assertion Markup Language (SAML) and its associated protocols form an open standard for communicating information, ``packaged'' in an \emph{assertion}, about a subject, such as a user \autocite{Kemp2005}. SAML assertions, provided by an \emph{identity provider}, may represent authentication information, authorization decisions, or attributes associated with the subject. A \emph{service provider} can then use these assertions for access control and identification.
+Security Assertion Markup Language (SAML) and its associated protocols form an open standard for communicating information, ``packaged'' in an \emph{assertion}, about a subject, such as a user \autocite{Kemp2005}. SAML assertions, provided by an \emph{identity provider} (IdP), may represent authentication information, authorization decisions, or attributes associated with the subject. A \emph{service provider} (SP) can then use these assertions for access control and identification.
 
-The use of SAML 2.0 can support single sign-on (SSO) of browsers, as specified by the Web Browser SSO Profile \autocite{Hughes2005}. When an unauthenticated HTTP user agent, in this case a browser, requests a secured resource from a service provider, the service provider issues a SAML authentication request to be delivered to the identity provider by the user agent. The identity provider identifies the subject, and issues a SAML response to be delivered to the service provider by the user agent. The service provider can then establish a security context for the subject and return the requested resource. 
+The use of SAML 2.0 can support single sign-on (SSO) for browsers, as specified by the Web Browser SSO Profile \autocite{Hughes2005}. When an unauthenticated HTTP user agent, in this case a browser, requests a secured resource from a service provider, the SP issues a SAML authentication request to be delivered to the identity provider by the user agent. The IdP identifies the subject, and issues a SAML response to be delivered back to the service provider by the user agent. The service provider can then establish a security context for the subject and return the requested resource. 
 
 \subsubsection{OAuth}
 ``The OAuth 2.0 authorization framework enables a third-party
@@ -83,17 +83,17 @@ A typical OAuth flow consists of a \emph{client} (e.g. an application) requestin
 \caption{Abstract Protocol Flow \autocite{Hardt2023}}
 \end{figure}
 
-A JSON Web Token (JWT) may be used as both as OAuth 2.0 authentication grants and tokens \autocite{Jones2015a, Bertocci2021}. It provides a secure way to communicate information about a subject (referred to as claims), encoded as a JSON object which may be signed and/or encrypted. \autocite{Jones2015}
+JSON Web Tokens (JWTs) may be used both as OAuth 2.0 authentication grants and tokens \autocite{Jones2015a, Bertocci2021}. They provide a secure way to communicate information (referred to as claims) about a subject, encoded as a JSON object which may be signed and/or encrypted. \autocite{Jones2015}
 
 \subsubsection{OpenID Connect}
-As detailed by its specification, OpenID Connect (OIDC) is ``a simple identity layer on top of the OAuth 2.0 protocol''. Information about the end user is conveyed in claims, as part of a JWT called an ID token. This information can then be used by a client to authenticate the user. \autocite{Sakimura2014} 
+As detailed by its specification, OpenID Connect (OIDC) is ``a simple identity layer on top of the OAuth 2.0 protocol''. Information about the end user is conveyed in claims, as part of a JWT called the ID token. This information can then be used by a client to authenticate the user. \autocite{Sakimura2014} 
 
 
 %---------- Methodologie ------------------------------------------------------
 \section{Methodology}%
 \label{sec:methodology}
 
-The research will be divided into 6 phases, the first of which is a literature review. Literature research will be performed to explore existing approaches, find expert opinions, and gain a deeper understanding of the state of the art. The result of this literature search can be found in section 2 of this research proposal.
+The research will be divided into 6 phases, the first of which is a literature review. Literature research will be performed to examine existing approaches, explore popular languages, and gain a deeper understanding of the state of the art. The result of this literature search can be found in section 2 of this research proposal.
 
 Phase 2 consists of creating a list of minimal requirements for a suitable language choice. Possible types of requirements could include ease of use, security implications, performance, and suitability for IAM-related tasks. A concrete list of measurable requirements will be assembled in consultation with thesis stakeholders and employees at TrustBuilder. The MoSCoW method will be used to order these requirements by importance, and each requirement will be marked as functional or non-functional.
 
@@ -114,5 +114,5 @@ Throughout this entire process, a thesis will be written that documents the rese
 
 Based on the findings in the literature review, JavaScript/TypeScript is expected to be the ideal language for writing extensions for IAM systems. It is currently the most popular programming language, and is already widely used for the extension of platforms, both in the general web development space as for IAM-related tasks. Being the most popular language, it has a rich package ecosystem, is actively being developed, and has a range of possible runtime environments. Having been specifically created for the web, with new standardized web APIs still being added, it can easily handle OAuth and SAML requirements, as both technologies were designed on top of existing web standards. JavaScript is already an excellent language choice for these purposes, and its continued innovation cements its place for years to come.
 
-As many languages can be compiled to JavaScript or Wasm now, an extension system built on top of a JavaScript and Wasm engine would also enable the usage of other languages, as technologies and requirements continue to evolve. Python remains a popular and easy-to-use language for scripting, and Rust is frequently used to safely write critical code. A system that enables this level of versatility would provide a future-proof platform for mission-critical customization scripts.
+As many languages can be compiled to JavaScript or Wasm now, an extension system built on top of a JavaScript and Wasm engine would also enable the usage of other languages. A system that enables this level of versatility would provide a future-proof platform for mission-critical customization scripts.
 
