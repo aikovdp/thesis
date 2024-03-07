@@ -87,7 +87,6 @@
 %% Render a Dutch outer title page if the main language is English
 \IfLanguageName{english}{%
     %% If necessary, information can be changed here
-    \degreesought{Professionele Bachelor toegepaste informatica}%
     \begin{otherlanguage}{dutch}%
        \maketitle%
     \end{otherlanguage}%
@@ -150,12 +149,15 @@
 
 \appendix
 
-\chapter{Onderzoeksvoorstel}
-
-Het onderwerp van deze bachelorproef is gebaseerd op een onderzoeksvoorstel dat vooraf werd beoordeeld door de promotor. Dat voorstel is opgenomen in deze bijlage.
+\chapter{\IfLanguageName{dutch}{Onderzoeksvoorstel}{Research proposal}}
+\IfLanguageName{dutch}{
+    Het onderwerp van deze bachelorproef is gebaseerd op een onderzoeksvoorstel dat vooraf werd beoordeeld door de promotor. Dat voorstel is opgenomen in deze bijlage.
+}{
+    The subject of this bachelor's thesis is based on a research proposal that was assessed in advance by the supervisor. That proposal is included in this appendix.
+}
 
 %% TODO: 
-%\section*{Samenvatting}
+\section*{\IfLanguageName{dutch}{Samenvatting}{Abstract}}
 
 % Kopieer en plak hier de samenvatting (abstract) van je onderzoeksvoorstel.
 
