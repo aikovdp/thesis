@@ -9,15 +9,15 @@
 
 To gain a deeper understanding of the research problem and the context in which it exists, this chapter explores the technologies involved, the current state of programming language popularity, and the approaches taken by comparable services.
 
-\subsection{IAM standards}
+\section{IAM standards}
 To attain further insight in the problem space, it is important to briefly discuss the dominant IAM standards. According to \textcite{Naik2016}, the most established identity protocols in the cloud computing industry are the following three: Security Assertion Markup Language (SAML), OAuth, and OpenID Connect (OIDC). 
 
-\subsubsection{SAML}
+\subsection{SAML}
 Security Assertion Markup Language (SAML) and its associated protocols form an open standard for communicating information, ``packaged'' in an \emph{assertion}, about a subject, such as a user \autocite{Kemp2005}. SAML assertions, provided by an \emph{identity provider} (IdP), may represent authentication information, authorization decisions, or attributes associated with the subject. A \emph{service provider} (SP) can then use these assertions for access control and identification.
 
 The use of SAML 2.0 can support single sign-on (SSO) for browsers, as specified by the Web Browser SSO Profile \autocite{Hughes2005}. When an unauthenticated HTTP user agent, in this case a browser, requests a secured resource from a service provider, the SP issues a SAML authentication request to be delivered to the identity provider by the user agent. The IdP identifies the subject, and issues a SAML response to be delivered back to the service provider by the user agent. The service provider can then establish a security context for the subject and return the requested resource. 
 
-\subsubsection{OAuth}
+\subsection{OAuth}
 ``The OAuth 2.0 authorization framework enables a third-party
 application to obtain limited access to an HTTP service, either on
 behalf of a resource owner [...], or [...] on its own behalf'' \autocite{Hardt2023}.
@@ -50,35 +50,45 @@ A typical OAuth flow consists of a \emph{client} (e.g. an application) requestin
 
 JSON Web Tokens (JWTs) may be used both as OAuth 2.0 authentication grants and tokens \autocite{Jones2015a, Bertocci2021}. They provide a secure way to communicate information (referred to as claims) about a subject, encoded as a JSON object which may be signed and/or encrypted. \autocite{Jones2015}
 
-\subsubsection{OpenID Connect}
+\subsection{OpenID Connect}
 As detailed by its specification, OpenID Connect (OIDC) is ``a simple identity layer on top of the OAuth 2.0 protocol''. Information about the end user is conveyed in claims, as part of a JWT called the ID token. This information can then be used by a client to authenticate the user. \autocite{Sakimura2014} 
 
-\subsection{Server-side languages}
+\section{Server-side languages}
 To determine possibly suitable programming languages, surveys may provide useful data to determine the currently most popular ones. The Stack Overflow Developer Survey 2023 \autocite{StackOverflow2023} and The State of Developer Ecosystem 2023 \autocite{JetBrains2023} each provide statistics on programming language popularity. Based on these results, the four most popular server-side programming languages are JavaScript, Python, Java, and TypeScript. Further popular languages include   C C++, C\#, PHP, Go, Kotlin, and Rust.
 
-\subsubsection{JavaScript and TypeScript}
+\subsection{JavaScript and TypeScript}
 In both surveys, JavaScript proves to be the most widely used programming language across developers. Despite having originally been created for usage in browsers \autocite{NCC1995}, it can also be used in server-side environments on runtime systems such as Node.js \autocite{OpenJSFoundation}.
 
 According to the TypeScript Handbook, TypeScript is a typed superset of JavaScript \autocite{TypeScript2023}. Its compiler checks code for type errors, and will then produce plain JavaScript code. This allows the compiled code to be run in any JS runtime environment.
 
-\subsubsection{Python}
+\subsection{Python}
 Python is a general-purpose programming language designed with simplicity and readability in mind \autocite{Peters2004}. Based on GitHub's 2022 Octoverse report, \textcite{Scarlett2023} states that Python is commonly used for web and software development, task automation, machine learning and data science, financial analysis, and artificial intelligence.
 
 The official Python documentation describes it as being ``suitable as an extension language for customizable applications'' \autocite{PSF2023}.
 
-\subsubsection{Java}
+\subsection{Java}
 Java is a general-purpose object-oriented programming language \autocite{Lindholm2015}. A Java application may be compiled to instructions for the Java Virtual Machine (JVM), which allows the language to be hardware- and operating system-independent. Other popular JVM languages include Kotlin and Scala \autocite{StackOverflow2023, JetBrains2023}.
 
-\subsubsection{WebAssembly}
+\subsection{WebAssembly}
 As stated on its home page, ``WebAssembly (abbreviated Wasm) is a binary instruction format [...] designed as a portable compilation target for programming languages, enabling deployment on the web for client and server applications'' \autocite{WebAssembly}. Although it is not a programming language itself, a runtime environment that can run Wasm applications would be able to run applications written in a variety of languages, such as C, C++, and Rust \autocite{EmscriptenContributors2015, RWWG2023}.
 
-\subsection{Comparable services}
-\subsubsection{Auth0 Actions}
-Auth0 is an IAM platform that enables developers to add authentication and authorization services to their applications \autocite{Auth0Overview}. Actions, one of their customization capabilities, let customers ``customize and extend Auth0's capabilities with custom logic'' \autocite{Auth0Actions}. Auth0 Actions are Node.js JavaScript functions which can be executed at specific points in identity flows.
+\section{Current approach}
+TrustBuilder's current technology for allowing customization and extension of their platform are called workflows \autocite{DefiningWorkflows}. Workflows consist of elements, such as conditions, scripts, and adapters, which are executed in an order defined by their connections. Custom code can be written in the form of JavaScript functions, which can be executed by script elements. Java code can also be uploaded as a ``service'' JAR file to the workflow platform, which can then be called from within a JavaScript function.
+
+\section{Comparable services}
+\subsection{Auth0 Actions}
+Auth0 is an IAM platform that enables developers to add authentication and authorization services to their applications \autocite{Auth0Overview}. Actions, one of their customization capabilities, let customers ``customize and extend Auth0's capabilities with custom logic'' \autocite{Auth0Actions}. Auth0 Actions are independent Node.js JavaScript functions which can be executed at specific points in identity flows. These functions typically take two parameters as input: an event object, describing an interaction with the platform, and an API object, providing the function implementation with the ability to determine the outcome of the flow, or call other Auth0 APIs relevant to the flow \autocite{Auth0Triggers}. These function are also able to use dependencies from the npm package registry.
 
 
 
-\subsubsection{Cloudflare Workers}
+\subsection{Cloudflare Workers}
 A more general-purpose example, Cloudflare Workers, announced by Kenton \textcite{Varda2017}, were created to allow customers to run code on Cloudflare's edge network, to cover use cases Cloudflare themselves can't. A Cloudflare Worker could initially only be written in JavaScript, but can now run code written in any language that compiles to JavaScript (such as TypeScript, Python, and Kotlin) or WebAssembly (such as C, C++, Rust and Go). \autocite{Varda2018, Koeninger2020}
 
-
+\subsection{GitHub Actions}
+GitHub Actions, GitHub's CI/CD platform, allows for the execution of logic when certain events take place within a GitHub repository \autocite{GitHubActions}. Although this is aimed more at DevOps workflows, it serves as another example of platforms providing extensibility and customizability for their clients. An Actions workflow consists of ``jobs'', which contain a series of steps. These steps can either be shell scripts or actions. Actions are reusable units of logic, and can be created by any user \autocite{GitHubCustomActions}. There are three types of actions:
+\begin{itemize}
+    \item{JavaScript actions} 
+    \item{Docker container actions, allowing more freedom in terms of operating systems, tools and language choice.}
+    \item{Composite Actions, consisting of multiple workflow steps}
+\end{itemize}
+Actions take input parameters as environment variables, and provide outputs by setting environment variables. 
