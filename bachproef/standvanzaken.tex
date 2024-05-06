@@ -54,22 +54,31 @@ JSON Web Tokens (JWTs) may be used both as OAuth 2.0 authentication grants and t
 As detailed by its specification, OpenID Connect (OIDC) is ``a simple identity layer on top of the OAuth 2.0 protocol''. Information about the end user is conveyed in claims, as part of a JWT called the ID token. This information can then be used by a client to authenticate the user. \autocite{Sakimura2014} 
 
 \section{Server-side languages}
-To determine possibly suitable programming languages, surveys may provide useful data to determine the currently most popular ones. The Stack Overflow Developer Survey 2023 \autocite{StackOverflow2023} and The State of Developer Ecosystem 2023 \autocite{JetBrains2023} each provide statistics on programming language popularity. Based on these results, the four most popular server-side programming languages are JavaScript, Python, Java, and TypeScript. Further popular languages include   C C++, C\#, PHP, Go, Kotlin, and Rust.
+\subsection{Language characteristics}
+Before discussing individual programming languages
+\subsubsection{Memory Safety}
+% TODO: Explain memory safety and security impact
 
-\subsection{JavaScript and TypeScript}
+\subsubsection{Type systems}
+% TODO: Explain static and dynamic typing, impact on bugs
+
+\subsection{Popular server-side programming languages}
+To determine possibly suitable programming languages, surveys may provide useful data to determine the currently most popular ones. The Stack Overflow Developer Survey 2023 \autocite{StackOverflow2023} and The State of Developer Ecosystem 2023 \autocite{JetBrains2023} each provide statistics on programming language popularity. Based on these results, the four most popular server-side programming languages are JavaScript, Python, Java, and TypeScript. Further popular languages include C, C++, C\#, PHP, Go, Kotlin, and Rust.
+
+\subsubsection{JavaScript and TypeScript}
 In both surveys, JavaScript proves to be the most widely used programming language across developers. Despite having originally been created for usage in browsers \autocite{NCC1995}, it can also be used in server-side environments on runtime systems such as Node.js \autocite{OpenJSFoundation}.
 
 According to the TypeScript Handbook, TypeScript is a typed superset of JavaScript \autocite{TypeScript2023}. Its compiler checks code for type errors, and will then produce plain JavaScript code. This allows the compiled code to be run in any JS runtime environment.
 
-\subsection{Python}
+\subsubsection{Python}
 Python is a general-purpose programming language designed with simplicity and readability in mind \autocite{Peters2004}. Based on GitHub's 2022 Octoverse report, \textcite{Scarlett2023} states that Python is commonly used for web and software development, task automation, machine learning and data science, financial analysis, and artificial intelligence.
 
 The official Python documentation describes it as being ``suitable as an extension language for customizable applications'' \autocite{PSF2023}.
 
-\subsection{Java}
+\subsubsection{Java}
 Java is a general-purpose object-oriented programming language \autocite{Lindholm2015}. A Java application may be compiled to instructions for the Java Virtual Machine (JVM), which allows the language to be hardware- and operating system-independent. Other popular JVM languages include Kotlin and Scala \autocite{StackOverflow2023, JetBrains2023}.
 
-\subsection{WebAssembly}
+\subsubsection{WebAssembly}
 As stated on its home page, ``WebAssembly (abbreviated Wasm) is a binary instruction format [...] designed as a portable compilation target for programming languages, enabling deployment on the web for client and server applications'' \autocite{WebAssembly}. Although it is not a programming language itself, a runtime environment that can run Wasm applications would be able to run applications written in a variety of languages, such as C, C++, and Rust \autocite{EmscriptenContributors2015, RWWG2023}.
 
 \section{Current approach}
