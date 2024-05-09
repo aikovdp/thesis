@@ -1,0 +1,140 @@
+\chapter{Proof of Concept}
+\label{ch:proof-of-concept}
+
+\section{Java}
+\subsection{Implementation}
+
+\begin{listing}[H]
+\begin{minted}{java}
+public interface Action<I, O> {
+    O execute(I input);
+}
+\end{minted}
+\caption{Action interface}
+\end{listing}
+
+\begin{listing}[H]
+\begin{minted}{java}
+public class LogAction implements Action<LogAction.Input, Void> {
+    private final Logger logger;
+    
+    public LogAction() {
+        logger = LoggerFactory.getLogger(LogAction.class);
+    }
+    
+    public LogAction(Logger logger) {
+        this.logger = logger;
+    }
+    
+    @Override
+    public Void execute(Input input) {
+        logger.makeLoggingEventBuilder(input.level).log(input.message, input.params);
+        return null;
+    }
+    
+    public record Input(
+        Level level,
+        String message,
+        Object... params
+    ) {
+    }
+}
+\end{minted}
+\caption{An SLF4J logging action}
+\end{listing}
+
+\begin{listing}[H]
+\begin{minted}{java}
+public class GetGitHubUserAction implements Action<GetGitHubUserAction.Input, GetGitHubUserAction.GitHubUser> {
+    private static final URI GITHUB_USERS_URI = URI.create("https://api.github.com/users/");
+    
+    private final Gson gson = new GsonBuilder()
+    .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+    .create();
+    
+    @Override
+    public GitHubUser execute(Input input) {
+        try (var client = HttpClient.newHttpClient()) {
+            HttpRequest request = HttpRequest.newBuilder()
+            .uri(GITHUB_USERS_URI.resolve(input.username))
+            .build();
+            String response = client.send(request, HttpResponse.BodyHandlers.ofString()).body();
+            return gson.fromJson(response, GitHubUser.class);
+        } catch (IOException e) {
+            throw new ActionException("Error occurred trying to reach GitHub API", e);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new ActionException("Thread was interrupted while trying to reach GitHub API", e);
+        }
+    }
+    
+    public record Input(
+        String username
+    ) {
+        
+    }
+    
+    public record GitHubUser(
+        String login,
+        String type,
+        String name,
+        String company,
+        String location,
+        int publicRepos,
+        int publicGists,
+        int followers,
+        int following
+    ) {}
+}
+\end{minted}
+\caption{An action that retrieves a user from the GitHub API}
+\end{listing}
+
+\begin{listing}[H]
+\begin{minted}{java}
+public class GetDatabaseUserAction implements Action<GetDatabaseUserAction.Input, GetDatabaseUserAction.DatabaseUser> {
+    
+    private final Jdbi jdbi;
+    
+    public GetDatabaseUserAction(String url) {
+        this.jdbi = Jdbi.create(url);
+    }
+    
+    @Override
+    public DatabaseUser execute(Input input) {
+        return jdbi.withHandle(handle ->
+            handle.createQuery("SELECT id, given_name, family_name, username, email FROM users WHERE username = :username")
+                .bind("username", input.username)
+                .map((rs, ctx) -> new DatabaseUser(
+                    rs.getInt("id"),
+                    rs.getString("given_name"),
+                    rs.getString("family_name"),
+                    rs.getString("username"),
+                    rs.getString("email")
+                )).one()
+        );
+    }
+    
+    public record Input(
+        String username
+    ) {
+    }
+    
+    public record DatabaseUser(
+        int id,
+        String givenName,
+        String familyName,
+        String username,
+        String email
+    ) {
+    }
+}
+\end{minted}
+\caption{An action that retrieves data from a database}
+\end{listing}
+
+\subsection{Findings}
+
+\section{TypeScript}
+\subsection{Implementation}
+\subsection{Findings}
