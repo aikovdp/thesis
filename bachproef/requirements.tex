@@ -19,11 +19,34 @@ As it should be possible for customers to write extensions to the IAM platform, 
 
 This list serves as the long list mentioned in the methodology chapter.
 
-\section{Safety}
-\subsection{Memory Safety}
-\subsection{Static Types}
+\section{Memory Safety}
+\section{Static Types}
 
 \section{Performance}
 % Not applicable, as network request will take up so much time that code performance costs will be negligible
 
 \section{Readability}
+
+\section{Final evaluation}
+
+\begin{center}
+\begin{tabular}{|l| c c c |}
+    \hline
+    Language & Popularity & Memory safe & Statically typed \\
+    \hline
+    JavaScript & 62\% & Yes & No \\
+    Python     & 52\% & Yes & No \\
+    Java       & 40\% & Yes & Yes \\
+    TypeScript & 36\% & Yes & Yes \\
+    C++        & 24\% & No  & Yes \\
+    C\#        & 24\% & Yes & Yes \\
+    C          & 19\% & No  & Yes \\
+    PHP        & 18\% & Yes & Certain aspects \\
+    Go         & 15\% & Yes & Yes \\
+    Kotlin     & 12\% & Yes & Yes \\
+    Rust       & 12\% & Yes & Yes \\
+    \hline
+\end{tabular}
+\end{center}
+
+Based on this evaluation, TypeScript and Java appear to be the most promising options. In the following chapter, a proof of concept will be made in each of these languages to further compare them and their suitability.
