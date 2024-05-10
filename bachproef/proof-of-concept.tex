@@ -1,8 +1,18 @@
 \chapter{Proof of Concept}
 \label{ch:proof-of-concept}
+To evaluate the suitability of the languages in the short list, a proof of concept was made that covers some typical use cases of TrustBuilder's extensions. 
 
-\section{Java}
-\subsection{Implementation}
+These extensions will made up of units called Actions, which can each handle a specific task. Actions can take inputs and produce outputs, and be tied together into a workflow. The way these actions are composed into workflows will be the responsibility of the encompassing framework, and is out of scope for this thesis.
+
+The proof of concept for each language will consist of the following:
+\begin{itemize}
+    \item An Action that logs a statement based on input, producing a side effect but no output
+    \item An Action that retrieves user information from a REST API. The GitHub API is used here as an example.
+    \item An Action that retrieves user information from a database. A local SQLite database is used here as an example.
+\end{itemize}
+
+\section{Implementation}
+\subsection{Java}
 
 \begin{listing}[H]
 \begin{minted}{java}
@@ -133,8 +143,8 @@ public class GetDatabaseUserAction implements Action<GetDatabaseUserAction.Input
 \caption{An action that retrieves data from a database}
 \end{listing}
 
-\subsection{Findings}
+\subsection{TypeScript}
 
-\section{TypeScript}
-\subsection{Implementation}
-\subsection{Findings}
+\section{Findings}
+\subsection{Java}
+\subsection{TypeScript}
