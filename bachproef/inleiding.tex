@@ -5,46 +5,44 @@
 \chapter{\IfLanguageName{dutch}{Inleiding}{Introduction}}%
 \label{ch:inleiding}
 
-De inleiding moet de lezer net genoeg informatie verschaffen om het onderwerp te begrijpen en in te zien waarom de onderzoeksvraag de moeite waard is om te onderzoeken. In de inleiding ga je literatuurverwijzingen beperken, zodat de tekst vlot leesbaar blijft. Je kan de inleiding verder onderverdelen in secties als dit de tekst verduidelijkt. Zaken die aan bod kunnen komen in de inleiding~\autocite{Pollefliet2011}:
+This bachelor thesis is written based on a business case from TrustBuilder, a European company providing Identity and Access Management (IAM) solutions for organizations across Europe, with extensive customization capabilities to satisfy client-specific needs.
 
-\begin{itemize}
-  \item context, achtergrond
-  \item afbakenen van het onderwerp
-  \item verantwoording van het onderwerp, methodologie
-  \item probleemstelling
-  \item onderzoeksdoelstelling
-  \item onderzoeksvraag
-  \item \ldots
-\end{itemize}
+Their product, also named TrustBuilder, is a platform that aims to be able to handle any IAM need, such as authentication, session management, authorization, and user management. Further requirements can take many forms, and the TrustBuilder platform needs to be able to tightly integrate with each client’s user-facing applications and other services. As these needs may differ from application to application, not everything can be a native part of the IAM system, and customization capabilities are a must. To satisfy these needs, their clients need to be able to to customize and extend their platform using custom code.
+
+TrustBuilder tackles this problem by allowing for the creation of \emph{workflows}. These workflows consist of simple building blocks such as \emph{script blocks}, \emph{adapters} and \emph{services}, using arrow connectors and \emph{condition blocks} between them for control flow. Script blocks can run custom JavaScript functions, allowing workflows to be used to implement virtually any functionality missing from the base product, as well as interface with the base product directly.
 
 \section{\IfLanguageName{dutch}{Probleemstelling}{Problem Statement}}%
 \label{sec:probleemstelling}
 
-Uit je probleemstelling moet duidelijk zijn dat je onderzoek een meerwaarde heeft voor een concrete doelgroep. De doelgroep moet goed gedefinieerd en afgelijnd zijn. Doelgroepen als ``bedrijven,'' ``KMO's'', systeembeheerders, enz.~zijn nog te vaag. Als je een lijstje kan maken van de personen/organisaties die een meerwaarde zullen vinden in deze bachelorproef (dit is eigenlijk je steekproefkader), dan is dat een indicatie dat de doelgroep goed gedefinieerd is. Dit kan een enkel bedrijf zijn of zelfs één persoon (je co-promotor/opdrachtgever).
+TrustBuilder wants to overhaul their workflow platform to improve the developer experience and maintainability of workflows. Therefore, they want to know what language(s) their workflow platform should be built around. Currently, JavaScript is used to script these extensions, but this decision was made over a decade ago and needs to be re-evaluated.
 
 \section{\IfLanguageName{dutch}{Onderzoeksvraag}{Research question}}%
 \label{sec:onderzoeksvraag}
 
-Wees zo concreet mogelijk bij het formuleren van je onderzoeksvraag. Een onderzoeksvraag is trouwens iets waar nog niemand op dit moment een antwoord heeft (voor zover je kan nagaan). Het opzoeken van bestaande informatie (bv. ``welke tools bestaan er voor deze toepassing?'') is dus geen onderzoeksvraag. Je kan de onderzoeksvraag verder specifiëren in deelvragen. Bv.~als je onderzoek gaat over performantiemetingen, dan 
+This thesis will investigate which languages would be the best choice for scripting extensions and customizations for the TrustBuilder IAM platforms. This encompasses the following sub-questions: 
+\begin{itemize}
+    \item{What are the key indicators these languages should be evaluated against?}
+    \item{What would be the pros and cons of specific language choices?}
+    \item{What are the security implications of specific language choices?}
+\end{itemize}
 
 \section{\IfLanguageName{dutch}{Onderzoeksdoelstelling}{Research objective}}%
 \label{sec:onderzoeksdoelstelling}
 
-Wat is het beoogde resultaat van je bachelorproef? Wat zijn de criteria voor succes? Beschrijf die zo concreet mogelijk. Gaat het bv.\ om een proof-of-concept, een prototype, een verslag met aanbevelingen, een vergelijkende studie, enz.
+A primary language choice based on the performed research and a proof of concept showcasing the language’s suitability for IAM-related tasks will allow TrustBuilder to start the overhaul of workflows with certainty.
+This thesis aims to provide insight into the process behind that selection, the advantages and disadvantages of its use, and compare it to a secondary contender. Both the primary and secondary language choices will be put to the test in a proof of concept that covers typical use cases of TrustBuilder's current extension system.
 
 \section{\IfLanguageName{dutch}{Opzet van deze bachelorproef}{Structure of this bachelor thesis}}%
 \label{sec:opzet-bachelorproef}
 
-% Het is gebruikelijk aan het einde van de inleiding een overzicht te
-% geven van de opbouw van de rest van de tekst. Deze sectie bevat al een aanzet
-% die je kan aanvullen/aanpassen in functie van je eigen tekst.
+The remainder of this bachelor thesis is structured as follows:
 
-De rest van deze bachelorproef is als volgt opgebouwd:
+In chapter~\ref{ch:stand-van-zaken}, an overview of the state of the art of the research domain is given, based on a literature review.
 
-In Hoofdstuk~\ref{ch:stand-van-zaken} wordt een overzicht gegeven van de stand van zaken binnen het onderzoeksdomein, op basis van een literatuurstudie.
+In chapter~\ref{ch:methodologie}, the methodology is explained, and the research methods used to formulate an answer to the research question are discussed.
 
-In Hoofdstuk~\ref{ch:methodologie} wordt de methodologie toegelicht en worden de gebruikte onderzoekstechnieken besproken om een antwoord te kunnen formuleren op de onderzoeksvragen.
+In chapter~\ref{ch:requirements}, the requirements of the final language choice are discussed. A long list of options is evaluated against these requirements to create a short list of two languages which will each be used in a proof of concept.
 
-% TODO: Vul hier aan voor je eigen hoofstukken, één of twee zinnen per hoofdstuk
+In chapter~\ref{ch:proof-of-concept}, each of the two languages in the short list are used to create a proof of concept which covers common use cases for TrustBuilder's extension system, and the findings in making these will be discussed.
 
-In Hoofdstuk~\ref{ch:conclusie}, tenslotte, wordt de conclusie gegeven en een antwoord geformuleerd op de onderzoeksvragen. Daarbij wordt ook een aanzet gegeven voor toekomstig onderzoek binnen dit domein.
+Finally, in chapter ~\ref{ch:conclusie}, a conclusion and an answer to the research question is given, with a primary and secondary language choice and a summary of the reasons behind it.
