@@ -50,7 +50,7 @@ public class LogAction implements Action<LogAction.Input, Void> {
     }
 }
 \end{minted}
-\caption{An SLF4J logging action}
+\caption{An SLF4J logging Action}
 \end{listing}
 
 \begin{listing}[H]
@@ -97,7 +97,7 @@ public class GetGitHubUserAction implements Action<GetGitHubUserAction.Input, Ge
     ) {}
 }
 \end{minted}
-\caption{An action that retrieves a user from the GitHub API}
+\caption{A Java Action that retrieves a user from the GitHub API}
 \end{listing}
 
 \begin{listing}[H]
@@ -140,10 +140,98 @@ public class GetDatabaseUserAction implements Action<GetDatabaseUserAction.Input
     }
 }
 \end{minted}
-\caption{An action that retrieves data from a database}
+\caption{A Java Action that retrieves user data from a database}
 \end{listing}
 
 \subsection{TypeScript}
+
+\begin{listing}[H]
+\begin{minted}{typescript}
+export type Action<Input, Output> = (input: Input) => Promise<Output>
+\end{minted}
+\caption{The Action type}
+\end{listing}
+
+\begin{listing}[H]
+\begin{minted}{typescript}
+export const logAction: Action<LogActionInput, void> = async (input) => {
+    const logger = input.logger ?? winston.createLogger({
+        transports: new winston.transports.Console()
+    })
+    
+    logger.log(input.level, input.message)
+}
+
+interface LogActionInput {
+    logger?: winston.Logger | null,
+    level: LogLevel,
+    message: string
+}
+
+type LogLevel = "silly" | "debug" | "verbose" | "http" | "info" | "warn" | "error"
+\end{minted}
+\caption{A Winston logging action}
+\end{listing}
+
+\begin{listing}[H]
+\begin{minted}{typescript}
+export const getGitHubUserAction: Action<GetGitHubUserActionInput, GithubUser> = async (input) => {
+    const res = await fetch(`https://api.github.com/users/${input.username}`)
+    
+    return res.json();
+}
+
+interface GetGitHubUserActionInput {
+    username: string
+}
+
+interface GithubUser {
+    login: string,
+    type: string,
+    name: string,
+    company: string,
+    location: string,
+    public_repos: number,
+    public_gists: number,
+    followers: number,
+    following: number
+}
+\end{minted}
+\caption{An TypeScript Action that retrieves a user from the GitHub API}
+\end{listing}
+
+\begin{listing}[H]
+\begin{minted}{typescript}
+const users = sqliteTable('users', {
+    id: integer('id').primaryKey(),
+    givenName: text("given_name"),
+    familyName: text("family_name"),
+    username: text("username").notNull(),
+    email: text("email").notNull()
+})
+
+const db = drizzle(new Database('database.db'), {schema: {users: users}})
+
+export const getDbUser: Action<GetDbUserActionInput, DbUser | undefined> = async (input) => {
+    return await db.query.users.findFirst({
+        where: eq(users.username, input.username)
+    })
+}
+
+interface GetDbUserActionInput {
+    username: string
+}
+
+interface DbUser {
+    id: number,
+    givenName?: string | null,
+    familyName?: string | null,
+    username: string,
+    email: string
+}
+\end{minted}
+\caption{A TypeScript Action that retrieves data from a database}
+\end{listing}
 
 \section{Findings}
 \subsection{Java}
