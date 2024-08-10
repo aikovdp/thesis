@@ -57,7 +57,13 @@ As detailed by its specification, OpenID Connect (OIDC) is ``a simple identity l
 \subsection{Language characteristics}
 Before discussing individual programming languages
 \subsubsection{Memory Safety}
-% TODO: Explain memory safety and security impact
+As defined by the \textcite{Prossimo2021}, memory safety is “a property of some programming languages that prevents programmers from introducing certain types of bugs related to how memory is used.” An example of a bug like this is an out of bounds read or write, such as retrieving or writing the 11th item in a list of 10 items. This operates on data stored outside of the list's bounds, and thus accesses memory that isn't meant to be accessed through there. Another vulnerability scenario, use after free, happens when memory is accessed after the program has freed it, which may contain other data by then.
+
+These memory safety bugs are often at the root of security vulnerabilities, as can be seen in the CWE list of top 10 known exploited vulnerabilities \autocite{CWE2023}. Four out of ten entries in this list are related to memory safety, specifically stating C and C++ as languages prone to these vulnerabilities.
+
+Their danger is also highlighted by reports from industry giants like Google and Microsoft. Microsoft has reported that memory safety issues are at the root of 70\% of their security vulnerabilities \autocite{Thomas2021}. Google reported similar numbers, with memory safety being the cause of 59\% of high severity security vulnerabilities in Android, and around 70\% in Chromium \autocite{ChromiumSecurity,Deus2021}.
+
+In February 2024, the White House published a report outlining guidelines to improve software security and its measurability, with a section specifically dedicated to memory safety in programming languages \autocite{NationalCyberDirector2024}. The report highlights the severe security impact of memory safety vulnerabilities, and calls for the use of memory safe languages. This follows an earlier report authored by multiple international government agencies which also warns against the danger of memory safety vulnerability, and champions the use of memory safe languages \autocite{CISA2023}.
 
 \subsubsection{Type systems}
 % TODO: Explain static and dynamic typing, impact on bugs
