@@ -53,6 +53,28 @@ JSON Web Tokens (JWTs) may be used both as OAuth 2.0 authentication grants and t
 \subsection{OpenID Connect}
 As detailed by its specification, OpenID Connect (OIDC) is ``a simple identity layer on top of the OAuth 2.0 protocol''. Information about the end user is conveyed in claims, as part of a JWT called the ID token. This information can then be used by a client to authenticate the user. \autocite{Sakimura2014} 
 
+\subsection{Time-Based One-Time Passwords}
+A Time-based One-Time Password (TOTP) is a numeric code valid during only a specific time window, designed for use in two-factor authentication flows \autocite{MRaihi2011}. One known implementor of the algorithm, the Google Authenticator app, generates 6-digit codes valid for 30 seconds each \autocite{GoogleKeyUri}.
+
+The TOTP algorithm is an extension to the HMAC-based One-Time Password (HOTP) algorithm, which generates a code based on a shared secret and an integer counter value. For the counter value, TOTP uses the current UNIX time (time passed since midnight UTC on 1 January 1970), divided by a time step. For example, with a time step of 30 seconds, the counter value will the current UNIX time in seconds, divided by 30. This means the counter value will be the same during this 30 second time window, resulting in an identical TOTP code when provided with the same secret key. Verifying a received code requires the validator to generate its own code using the user’s shared secret, and checking whether they match.
+
+The underlying HOTP algorithm generates its resulting \(n\)-digit code in a series of steps \autocite{MRaihi2005}. First, it creates an HMAC hash of a 64-bit counter value using a shared secret. The resulting hash is then truncated to 31 bits using a bitwise operation called dynamic truncation, illustrated in listing ~\ref{lst:DT}. This 31-bit binary array is then converted to a numeric value, of which the least significant \(n\) digits are used to form an \(n\)-digit code.
+
+\begin{listing}[h]
+\begin{minted}{text}
+DT(String) // String = String[0]...String[19]
+  Let OffsetBits be the low-order 4 bits of String[19]
+  Offset = StToNum(OffsetBits) // 0 <= OffSet <= 15
+  Let P = String[OffSet]...String[OffSet+3]
+  Return the Last 31 bits of P
+\end{minted}
+    \caption[Dynamic Truncation algorithm]{Dynamic Truncation algorithm \autocite{MRaihi2005}\label{lst:DT}}
+\end{listing}
+
+Google Authenticator uses a time step of 30 seconds, a code length of 6 digits, HMAC-SHA1 for its TOTP implementation, and expects the secret key to be base32-encoded \autocite{GoogleKeyUri}.
+
+To implement a Google Authenticator compatible TOTP validator in a specific language, it will need to be capable of retrieving the current UNIX time, decoding a base32 string, generating an HMAC-SHA1 hash, and performing operations on an array of bits. Though this may be possible in most languages, some could be better suited to this than others.
+
 \section{Server-side languages}
 \subsection{Language characteristics}
 Before discussing individual programming languages
