@@ -1,8 +1,22 @@
 \chapter{Requirements}
 \label{ch:requirements}
+With the new workflow engine being a brand new microservice, there are not a lot of pre-existing requirements. The decision was made to not build upon the existing workflow system, but build a new one from scratch. This provides a lot of freedom in terms of technology choices, without requirements imposed by the legacy system or other components. As a result, they can choose the technologies best suited to the project, including the language in which clients would write extensions.
+
+At the time of writing this thesis, the project is still in a preliminary brainstorming phase at TrustBuilder, and not much is known about the intended final design of the new workflow engine. However, a few goals are already set:
+
+\begin{itemize}
+    \item The workflow engine must run as a separate microservice
+    \item Clients should be able to use a low-code workflow system without requiring specific programming knowledge
+    \item Developers should be able to to write custom code for bespoke integrations that can be called from a low-code workflow
+\end{itemize}
+
+As seen in comparable services as part of the literature review, such a system typically consists of ``Actions'': blocks of functionality that receive inputs and produce outputs, arranged sequentially as part of a workflow. A workflow can be designed without programming knowledge, simply by placing existing Actions in the desired order and configuring them. An Action, on the other hand, consists of a distinct unit of code which can accept an input and produce an output. TrustBuilder's take on this is not yet finalized, so this hypothesis cannot be blindly followed as a target architecture, but it can serve as valuable context throughout the course of this thesis.
+
+The goals listed earlier do not place a lot of constraints and requirements on the eventual language choice, but based on the information gathered in the literature review and the presumed eventual functionality, some key aspects can be identified.
+
 
 \section{Popularity}
-As it should be possible for customers to write extensions to the IAM platform, the popularity of the language in which these should be written is of great importance. Customers should be able to easily find a developer who can write in the chosen language. As discussed in the literature review, the most popular server-side programming languages are as follows:
+As it should be possible for customers to write their own extensions to the IAM platform, the popularity of the language in which these should be written is of great importance. Customers should be able to easily find a developer who can write in the chosen language. As discussed in the literature review, the most popular server-side programming languages are as follows:
 \begin{itemize}
     \item JavaScript
     \item Python
