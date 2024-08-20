@@ -77,7 +77,7 @@ To implement a Google Authenticator compatible TOTP validator in a specific lang
 
 \section{Server-side languages}
 \subsection{Language characteristics}
-Before discussing individual programming languages
+Before discussing individual programming languages % TODO
 \subsubsection{Memory Safety}
 As defined by the \textcite{Prossimo2021}, memory safety is “a property of some programming languages that prevents programmers from introducing certain types of bugs related to how memory is used.” An example of a bug like this is an out of bounds read or write, such as retrieving or writing the 11th item in a list of 10 items. This operates on data stored outside of the list's bounds, and thus accesses memory that isn't meant to be accessed through there. Another vulnerability scenario, use after free, happens when memory is accessed after the program has freed it, which may contain other data by then.
 
@@ -132,6 +132,24 @@ Java is a general-purpose object-oriented programming language \autocite{Lindhol
 
 \subsubsection{WebAssembly}
 As stated on its home page, ``WebAssembly (abbreviated Wasm) is a binary instruction format [...] designed as a portable compilation target for programming languages, enabling deployment on the web for client and server applications'' \autocite{WebAssembly}. Although it is not a programming language itself, a runtime environment that can run Wasm applications would be able to run applications written in a variety of languages, such as C, C++, and Rust \autocite{EmscriptenContributors2015, RWWG2023}.
+
+\section{Software Supply Chain Security Risks}
+Software supply chain vulnerabilities make up two entries in the OWASP Top 10, a document listing some the most critical security risks for web applications: Vulnerable and outdated components, and software and data integrity failures \autocite{OWASPTop102021}. While these factors are not directly tied to programming languages themselves, their ecosystem and its availability of necessary tooling does influence how straightforward it is to mitigate these risks.
+
+\subsection{Software Bill Of Materials}
+One way to mitigate these risks is a software bill of materials, or SBOM for short. It is a document detailing all dependencies, including transitive ones, used in a piece of software \autocite{SBOM2024}. Using these, software authors and consumers are able to identify vulnerable components and monitor their security. Other tools can then scan these SBOMs to generate a list of known vulnerabilities in the used versions of components, and suggest mitigations such as upgrading to patched versions. 
+According to GitLab's Sandra \textcite{Gittlen2024}, the two most popular SBOM standards at this time are SPDX and CycloneDX.
+
+SPDX is an SBOM standard developed by the Linux Foundation, and first released in 2011 \autocite{SPDXAbout}. In 2021, SPDX specification 2.2.1 was recognized as an ISO standard.
+The SPDX community provides Gradle and Maven plugins to generate SBOMs in the SPDX format \autocite{SPDXTools}.
+
+CycloneDX is another SBOM standard, backed by the OWASP foundation, initially developed for use with its Dependency-Track software \autocite{CycloneDXHistory}. The project provides first-party tools to generate CycloneDX SBOMs for Java, Kotlin, Python, PHP, C\#, Go, JavaScript, TypeScript and Rust projects \autocite{CDXTools2024}.
+
+Third-party services such as GitHub, GitLab, and Snyk are also capable of generating SBOMs for projects in a variety of languages \autocite{GitHubSBOM,Gittlen2024,Snyk2024}. GitHub generates them in the SPDX format, GitLab in the CycloneDX format, and Snyk is capable of both.
+
+% TODO \subsection{Release Signing}
+
+If extensions to TrustBuilder's platform will be allowed to include external libraries, they should be required to include an SBOM detailing their dependencies. As a cybersecurity platform, it will be crucial that these extensions can be regularly checked for vulnerabilities, and the chosen language should be one for which sufficiently reputable SBOM tooling exists. If TrustBuilder wishes to use the CycloneDX standard for this, any popular language would meet this requirement. If they instead wish to opt for SPDX, Java and Kotlin projects built with Maven or Gradle are best supported by the SPDX community, but third party services can offer this functionality for many other languages and package managers.
 
 \section{Current approach}
 TrustBuilder's current technology for allowing customization and extension of their platform are called workflows \autocite{DefiningWorkflows}. Workflows consist of elements, such as conditions, scripts, and adapters, which are executed in an order defined by their connections. Custom code can be written in the form of JavaScript functions, which can be executed by script elements. Java code can also be uploaded as a ``service'' JAR file to the workflow platform, which can then be called from within a JavaScript function.
