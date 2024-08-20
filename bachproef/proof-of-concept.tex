@@ -2,16 +2,70 @@
 \label{ch:proof-of-concept}
 To evaluate the suitability of the languages in the short list, a proof of concept was made that covers some typical use cases of TrustBuilder's extensions. 
 
-These extensions will made up of units called Actions, which can each handle a specific task. Actions can take inputs and produce outputs, and be tied together into a workflow. The way these actions are composed into workflows will be the responsibility of the encompassing framework, and is out of scope for this thesis.
+Assuming the target functionality defined in the requirements analysis, extensions will made up of units called Actions, which can each handle a specific task. Actions can take inputs and produce outputs, and be tied together into a workflow. The way these actions are composed into workflows will be the responsibility of the encompassing framework, and is out of scope for this thesis.
 
 The proof of concept for each language will consist of the following:
 \begin{itemize}
-    \item An Action that logs a statement based on input, producing a side effect but no output
     \item An Action that retrieves user information from a REST API. The GitHub API is used here as an example.
     \item An Action that retrieves user information from a database. A local SQLite database is used here as an example.
+    \item An Action that verifies a TOTP code, as an example of a typical cybersecurity task.
+    \item An Action that passes data to the workflow that encompasses it.
+    \item An automatically generated CycloneDX SBOM for the project that implements the above functionality.
 \end{itemize}
 
 \section{Implementation}
+\subsection{REST API Call Action}
+\subsubsection{TypeScript}
+\begin{listing}[h]
+    \begin{minted}[fontsize=\footnotesize]{typescript}
+export const getGitHubUserAction: Action<GetGitHubUserActionInput, GithubUser> = 
+  async (input) => {
+    const res = await fetch(`https://api.github.com/users/${input.username}`);
+    return res.json();
+  };
+    \end{minted}
+    \caption{REST API call in TypeScript}
+\end{listing}
+Calling a REST API in TypeScript is straightforward. Through the Fetch API, these API calls can be performed with little complexity in very few lines of code. Its \texttt{json()} method also allows you to easily parse the returned JSON response.
+
+JSON serialization and deserialization is also part of the language specification, making JavaScript and TypeScript even better suited for consuming JSON REST APIs \autocite{EcmaInternational2024}. This is to be expected, considering JavaScript's roots in web browsers. However, in this proof of concept, no validation is performed on the returned object. TypeScript simply casts the parsed response's type to the \texttt{GithubUser} type, without any additional checks or warnings. It is the programmer's responsibility to be aware of this, and validate the response's content accordingly.
+
+\subsubsection{Java}
+\begin{listing}[h]
+    \begin{minted}[fontsize=\footnotesize]{java}
+public class GetGitHubUserAction implements Action<Input, GitHubUser> {
+  private static final URI GITHUB_USERS_URI = URI.create("https://api.github.com/users/");
+    
+  private final Gson gson = new GsonBuilder()
+    .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+    .create();
+    
+  @Override
+  public GitHubUser execute(Input input, WorkflowContext context) {
+    try (var client = HttpClient.newHttpClient()) {
+      HttpRequest request = HttpRequest.newBuilder()
+        .uri(GITHUB_USERS_URI.resolve(input.username))
+        .build();
+      String response = client.send(request, HttpResponse.BodyHandlers.ofString()).body();
+      return gson.fromJson(response, GitHubUser.class);
+    } catch (IOException e) {
+      throw new ActionException("Error occurred trying to reach GitHub API", e);
+    } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+      throw new ActionException("Thread was interrupted while trying to reach GitHub API", e);
+    }
+  }
+}
+    \end{minted}
+    \caption{REST API call in Java}
+\end{listing}
+As of Java 11, the Java platform provides a built-in HTTP Client API, making it easy to call REST APIs without an external library. Compared to the TypeScript implementation of this call, the Java one is significantly more verbose, requiring a try-with-resources statement to handle automatic closure of the client, and handling two checked exceptions. Although this makes the code more robust and determinate, it does make the language less appealing for use in small snippets like Actions. Without checked exceptions, the programmer wouldn't be required to decide on what to do with them, and could let the encompassing framework handle them instead.
+
+Additionally, JSON (de)serialization is not part of the Java Platform APIs, requiring a third party library to cover this functionality. In this proof of concept, Google's Gson was chosen. This once again requires additional code and introduces some supply chain risk, but validates the JSON contents when deserializing it into an object of the specified class, unlike TypeScript's unsafe cast.
+
+\subsubsection{Summary}
+While TypeScripts provides a quick way to call REST services and covers most functionality out of the box, it drops the ball in terms of safety by default. A happy flow can be written in no time, but the programmer is responsible for taking the necessary safety measures for when something goes wrong, if these scenario's aren't handled by the encompassing framework. What Java lacks in terseness and JSON functionality, it makes up for in safety. It is type safe every step of the way, and requires the programmer to handle exceptions, but as a result is significantly more verbose than TypeScript.
+
 \subsection{Java}
 
 \begin{listing}[H]
