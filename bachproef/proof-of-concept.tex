@@ -13,7 +13,38 @@ The proof of concept for each language will consist of the following:
     \item An automatically generated CycloneDX SBOM for the project that implements the above functionality.
 \end{itemize}
 
+The code examples in the following sections of this chapter are snippets, and often omit lines such as imports and type definitions for the sake of brevity and readability. The full codebases of the proofs of concept can be retrieved at the following URLs:
+\begin{itemize}
+    \item TypeScript: \url{https://github.com/aikovdp/thesis-poc-ts}
+    \item Java: \url{https://github.com/aikovdp/thesis-poc-java}
+\end{itemize} 
+
 \section{Implementation}
+\subsection{Actions}
+The conceptual ``Actions'' detailed above, units of code accepting input and output, can be represented as functions in both TypeScript and Java. 
+
+The Java implementation in listing~\ref{lst:action-java} takes the form of a generic interface with a single \texttt{execute} method. The interface accepts type parameters \texttt{I} and \texttt{O}, representing the input and output types of the action. The \texttt{execute} method accepts an input of type \texttt{I} and a \texttt{WorkflowContext} object, and produces an output of type \texttt{O}.
+\begin{listing}[H]
+    \begin{minted}{java}
+public interface Action<I, O> {
+  O execute(I input, WorkflowContext context);
+}
+    \end{minted}
+    \caption{Action interface in Java}
+    \label{lst:action-java}
+\end{listing}
+
+The TypeScript implementation in listing~\ref{lst:action-ts} is similar, but the function can be defined as a type itself, without an encompassing interface. It is also a generic type, accepting \texttt{Input} and \texttt{Output} type parameters. There is no underlying technical reason why the Java type parameter names are a single capital letter (\texttt{I}, \texttt{O}) while those in TypeScript are PascalCased (\texttt{Input}, \texttt{Output}). This is simply following stylistic conventions for those languages.
+\begin{listing}[H]
+    \begin{minted}{typescript}
+export type Action<Input, Output> = 
+  (input: Input, context: WorkflowContext) => Promise<Output>
+    \end{minted}
+    \caption{Action type in TypeScript}
+    \label{lst:action-ts}
+\end{listing}
+The Action construct can be elegantly declared in both languages, each in their own idiomatic way.
+
 \subsection{REST API Call Action}
 \subsubsection{TypeScript}
 \begin{listing}[h]
@@ -252,24 +283,3 @@ With the Web Cryptography API and Java's Cryptography Architecture, both languag
 
 \subsection{Workflow Context}
 \subsection{Testing}
-
-
-
-\begin{listing}[H]
-\begin{minted}{java}
-public interface Action<I, O> {
-  O execute(I input);
-}
-\end{minted}
-\caption{Action interface in Java}
-\end{listing}
-
-
-
-\begin{listing}[H]
-\begin{minted}{typescript}
-export type Action<Input, Output> = (input: Input) => Promise<Output>
-\end{minted}
-\caption{Action type in TypeScript}
-\end{listing}
-
