@@ -66,227 +66,210 @@ Additionally, JSON (de)serialization is not part of the Java Platform APIs, requ
 \subsubsection{Summary}
 While TypeScripts provides a quick way to call REST services and covers most functionality out of the box, it drops the ball in terms of safety by default. A happy flow can be written in no time, but the programmer is responsible for taking the necessary safety measures for when something goes wrong, if these scenario's aren't handled by the encompassing framework. What Java lacks in terseness and JSON functionality, it makes up for in safety. It is type safe every step of the way, and requires the programmer to handle exceptions, but as a result is significantly more verbose than TypeScript.
 
-\subsection{Java}
+\subsection{Database Query Action}
+% TODO
+\pagebreak
+\subsection{TOTP Verification Action}
+Verifying a TOTP code is a prime example of typical cybersecurity functionality commonly implemented through workflows at TrustBuilder. This makes it an excellent candidate to test a language's suitability for such tasks. As mentioned in the literature review, implementing the TOTP algorithm depends on a couple of additional technologies: Unix time, HMAC, Base32, and bitwise operations. Both implementations here abstract away functionality in three distinct units: the verification action depends on the TOTP generator, which in turn depends on the HOTP generator.
+\subsubsection{TypeScript}
+Through the use of the Web Cryptography API, an HMAC-SHA1 hash can easily be generated from the provided secret and counter value. However, converting the counter value to its required 8-byte binary representation requires additional measures to be taken due to a lack of specific number types in JavaScript. The \texttt{Number} value needs to be converted to a \texttt{BigInt}, to then be set as an unsigned 64-bit \texttt{BigInt} on the \texttt{DataView} encompassing the \texttt{ArrayBuffer}. This can be seen in listing ~\ref{lst:hotp-ts}. Dynamic truncation of the HMAC-SHA1 hash was done using a DataView object, making the bitwise operations relatively trivial.
+\begin{listing}[H]
+    \begin{minted}[fontsize=\footnotesize]{typescript}
+import { Action } from "../action.js";
+import * as totp from "../lib/totp.js"
+
+export const verifyTotp: Action<VerifyTotpInput, boolean> = async (input) => {
+  return parseInt(input.code) === await totp.generate(input.key);
+}
+
+interface VerifyTotpInput {
+  key: string,
+  code: string
+}
+    \end{minted}
+    \caption{TOTP verification Action in TypeScript}
+\end{listing}
+\begin{listing}[H]
+    \begin{minted}[fontsize=\footnotesize]{typescript}
+import * as hotp from "./hotp.js";
+
+export const TIME_STEP_SECONDS = 30
+
+export async function generate(key: string) {
+  const counter = Math.floor(Date.now() / 1000 / TIME_STEP_SECONDS);
+  return hotp.generate(key, counter);
+}
+    \end{minted}
+    \caption{TOTP generator in TypeScript}
+\end{listing}
+\begin{listing}[H]
+    \begin{minted}[fontsize=\footnotesize]{typescript}
+import * as base32 from "./base32.js";
+
+export async function generate(key: string, counter: number) {
+  const buffer = new ArrayBuffer(8);
+  new DataView(buffer).setBigUint64(0, BigInt(counter));
+  const hash = await hmacSha(base32.decode(key), buffer);
+    
+  return truncate(hash) % 10 ** 6;
+}
+
+async function hmacSha(
+  keyBytes: ArrayBuffer,
+  dataBytes: ArrayBuffer
+): Promise<ArrayBuffer> {
+  const key = await crypto.subtle.importKey(
+    "raw",
+    keyBytes,
+    {
+      name: "HMAC",
+      hash: "SHA-1",
+    },
+    false,
+    ["sign"]
+  );
+    
+  return crypto.subtle.sign("HMAC", key, dataBytes);
+}
+
+function truncate(hash: ArrayBuffer): number {
+  const view = new DataView(hash);
+  const offset = view.getUint8(view.byteLength - 1) & 0xf;
+  return view.getInt32(offset) & 0x7fffffff;
+}
+    \end{minted}
+    \caption{HOTP generator in TypeScript}
+    \label{lst:hotp-ts}
+\end{listing}
+
+The Base32 private key also needs to be decoded, but no such functionality is provided by the language or Web APIs, and no reputable platform-agnostic libraries could be found that provide this functionality. As a result, this required an implementation from scratch.
+\begin{listing}[H]
+    \begin{minted}[fontsize=\footnotesize]{typescript}
+const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+
+export function decode(base32: string) {
+  base32 = base32.replace(/=+$/, "");
+
+  let currentValue = 0;
+  let bits = 0;
+  let index = 0;
+  const array = new Uint8Array((base32.length * 5) / 8);
+  base32
+    .split("")
+    .map((char) => alphabet.indexOf(char))
+    .forEach((value) => {
+      if (value === -1) throw new Error("Invalid character in base32 string");
+      currentValue = (currentValue << 5) | value;
+      bits += 5;
+      if (bits >= 8) {
+        array[index++] = currentValue >>> (bits - 8);
+        bits -= 8;
+      }
+    });
+  return array.buffer;
+}
+    \end{minted}
+    \caption{Base32 decoder in TypeScript}
+\end{listing}
+
+\subsubsection{Java}
+The Java Cryptography Architecture, encompassing the \texttt{java.security} and \texttt{javax.crypto} packages, provides API for handling the cryptographic key and generating the HMAC-SHA1 hash. Base32 decoding is not bundled with the Java platform either though, also requiring a separate library or custom implementation. With Java having a longer history of being used as a server-side language, its ecosystem of cryptography libraries is able to fill this need easily. This proof of concept uses the Bouncy Castle library to decode the Base32-encoded secret key. 
+\begin{listing}[H]
+    \begin{minted}[fontsize=\footnotesize]{java}
+public class VerifyTOTPAction implements Action<Input, Boolean> {
+    
+  @Override
+  public Boolean execute(Input input, WorkflowContext context) {
+    return input.totp() == TOTP.generate(input.key());
+  }
+    
+  public record Input(
+    String key,
+    int totp
+  ) {}
+}
+    \end{minted}
+    \caption{TOTP verification Action in Java}
+\end{listing}
+\begin{listing}[H]
+    \begin{minted}[fontsize=\footnotesize]{java}
+public final class TOTP {
+    
+  public static final int TIME_STEP_SECONDS = 30;
+    
+  private TOTP() {}
+    
+  public static int generate(String key) {
+    long counter = ZonedDateTime.now().toEpochSecond() / TIME_STEP_SECONDS;
+    return HOTP.generate(key, counter);
+  }
+}
+    \end{minted}
+    \caption{TOTP generator in Java}
+\end{listing}
+\begin{listing}[H]
+    \begin{minted}[fontsize=\footnotesize]{java}
+public final class HOTP {
+  private HOTP() {}
+    
+  public static int generate(String key, long counter) {
+    byte[] hash = hmacSha(key, longToByteArray(counter));
+    return truncate(hash) % (int) Math.pow(10, 6);
+  }
+    
+  public static byte[] hmacSha(String keyString, byte[] bytes) {
+    Key key = new SecretKeySpec(Base32.decode(keyString), "RAW");
+    Mac hmacSha1;
+    try {
+      hmacSha1 = Mac.getInstance("HmacSHA1");
+      hmacSha1.init(key);
+      return hmacSha1.doFinal(bytes);
+    } catch (NoSuchAlgorithmException | InvalidKeyException e) {
+      throw new ActionException(e);
+    }
+  }
+    
+  private static byte[] longToByteArray(long value) {
+    ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
+    buffer.putLong(value);
+    return buffer.array().clone();
+  }
+    
+  private static int truncate(byte[] hash) {
+    int offset = hash[hash.length - 1] & 0xf;
+    ByteBuffer buffer = ByteBuffer.wrap(hash);
+    // Get 4 bytes at offset index, and discard the most significant one
+    return buffer.getInt(offset) & 0x7FFFFFFF;
+  }
+}
+    \end{minted}
+    \caption{HOTP generator in Java}
+\end{listing}
+To perform the bitwise operations necessary for the binary representation of the counter value and the dynamic truncation of the HMAC-SHA1 hash, the ByteBuffer class of the Java NIO API is used. The counter conversion is easier here however, as the 8-byte \texttt{long} value can be directly placed into the ByteBuffer. Thanks to Java's more specific numeric types, a host of accidental bugs is avoided here by the type system itself.
+
+\subsubsection{Summary}
+With the Web Cryptography API and Java's Cryptography Architecture, both languages are at a similar level of maturity for core cryptographic operations. The surrounding lower-level operations are not however. Java's more precise numeric types make these easier, and its more mature ecosystem offers reputable cryptography libraries TypeScript's cannot provide.
+
+\subsection{Workflow Context}
+\subsection{Testing}
+
+
 
 \begin{listing}[H]
 \begin{minted}{java}
 public interface Action<I, O> {
-    O execute(I input);
+  O execute(I input);
 }
 \end{minted}
-\caption{Action interface}
+\caption{Action interface in Java}
 \end{listing}
 
-\begin{listing}[H]
-\begin{minted}{java}
-public class LogAction implements Action<LogAction.Input, Void> {
-    private final Logger logger;
-    
-    public LogAction() {
-        logger = LoggerFactory.getLogger(LogAction.class);
-    }
-    
-    public LogAction(Logger logger) {
-        this.logger = logger;
-    }
-    
-    @Override
-    public Void execute(Input input) {
-        logger.makeLoggingEventBuilder(input.level).log(input.message, input.params);
-        return null;
-    }
-    
-    public record Input(
-        Level level,
-        String message,
-        Object... params
-    ) {
-    }
-}
-\end{minted}
-\caption{An SLF4J logging Action}
-\end{listing}
 
-\begin{listing}[H]
-\begin{minted}{java}
-public class GetGitHubUserAction implements Action<GetGitHubUserAction.Input, GetGitHubUserAction.GitHubUser> {
-    private static final URI GITHUB_USERS_URI = URI.create("https://api.github.com/users/");
-    
-    private final Gson gson = new GsonBuilder()
-    .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-    .create();
-    
-    @Override
-    public GitHubUser execute(Input input) {
-        try (var client = HttpClient.newHttpClient()) {
-            HttpRequest request = HttpRequest.newBuilder()
-            .uri(GITHUB_USERS_URI.resolve(input.username))
-            .build();
-            String response = client.send(request, HttpResponse.BodyHandlers.ofString()).body();
-            return gson.fromJson(response, GitHubUser.class);
-        } catch (IOException e) {
-            throw new ActionException("Error occurred trying to reach GitHub API", e);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new ActionException("Thread was interrupted while trying to reach GitHub API", e);
-        }
-    }
-    
-    public record Input(
-        String username
-    ) {
-        
-    }
-    
-    public record GitHubUser(
-        String login,
-        String type,
-        String name,
-        String company,
-        String location,
-        int publicRepos,
-        int publicGists,
-        int followers,
-        int following
-    ) {}
-}
-\end{minted}
-\caption{A Java Action that retrieves a user from the GitHub API}
-\end{listing}
-
-\begin{listing}[H]
-\begin{minted}{java}
-public class GetDatabaseUserAction implements Action<GetDatabaseUserAction.Input, GetDatabaseUserAction.DatabaseUser> {
-    
-    private final Jdbi jdbi;
-    
-    public GetDatabaseUserAction(String url) {
-        this.jdbi = Jdbi.create(url);
-    }
-    
-    @Override
-    public DatabaseUser execute(Input input) {
-        return jdbi.withHandle(handle ->
-            handle.createQuery("SELECT id, given_name, family_name, username, email FROM users WHERE username = :username")
-                .bind("username", input.username)
-                .map((rs, ctx) -> new DatabaseUser(
-                    rs.getInt("id"),
-                    rs.getString("given_name"),
-                    rs.getString("family_name"),
-                    rs.getString("username"),
-                    rs.getString("email")
-                )).one()
-        );
-    }
-    
-    public record Input(
-        String username
-    ) {
-    }
-    
-    public record DatabaseUser(
-        int id,
-        String givenName,
-        String familyName,
-        String username,
-        String email
-    ) {
-    }
-}
-\end{minted}
-\caption{A Java Action that retrieves user data from a database}
-\end{listing}
-
-\subsection{TypeScript}
 
 \begin{listing}[H]
 \begin{minted}{typescript}
 export type Action<Input, Output> = (input: Input) => Promise<Output>
 \end{minted}
-\caption{The Action type}
+\caption{Action type in TypeScript}
 \end{listing}
 
-\begin{listing}[H]
-\begin{minted}{typescript}
-export const logAction: Action<LogActionInput, void> = async (input) => {
-    const logger = input.logger ?? winston.createLogger({
-        transports: new winston.transports.Console()
-    })
-    
-    logger.log(input.level, input.message)
-}
-
-interface LogActionInput {
-    logger?: winston.Logger | null,
-    level: LogLevel,
-    message: string
-}
-
-type LogLevel = "silly" | "debug" | "verbose" | "http" | "info" | "warn" | "error"
-\end{minted}
-\caption{A Winston logging action}
-\end{listing}
-
-\begin{listing}[H]
-\begin{minted}{typescript}
-export const getGitHubUserAction: Action<GetGitHubUserActionInput, GithubUser> = async (input) => {
-    const res = await fetch(`https://api.github.com/users/${input.username}`)
-    
-    return res.json();
-}
-
-interface GetGitHubUserActionInput {
-    username: string
-}
-
-interface GithubUser {
-    login: string,
-    type: string,
-    name: string,
-    company: string,
-    location: string,
-    public_repos: number,
-    public_gists: number,
-    followers: number,
-    following: number
-}
-\end{minted}
-\caption{An TypeScript Action that retrieves a user from the GitHub API}
-\end{listing}
-
-\begin{listing}[H]
-\begin{minted}{typescript}
-const users = sqliteTable('users', {
-    id: integer('id').primaryKey(),
-    givenName: text("given_name"),
-    familyName: text("family_name"),
-    username: text("username").notNull(),
-    email: text("email").notNull()
-})
-
-const db = drizzle(new Database('database.db'), {schema: {users: users}})
-
-export const getDbUser: Action<GetDbUserActionInput, DbUser | undefined> = async (input) => {
-    return await db.query.users.findFirst({
-        where: eq(users.username, input.username)
-    })
-}
-
-interface GetDbUserActionInput {
-    username: string
-}
-
-interface DbUser {
-    id: number,
-    givenName?: string | null,
-    familyName?: string | null,
-    username: string,
-    email: string
-}
-\end{minted}
-\caption{A TypeScript Action that retrieves data from a database}
-\end{listing}
-
-\section{Findings}
-\subsection{Java}
-\subsection{TypeScript}
