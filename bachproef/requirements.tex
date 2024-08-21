@@ -49,8 +49,9 @@ Considering these actions will be executed in response to network calls, and wil
 % TODO
 
 \section{Final evaluation}
-The table below lists each language in the long list and checks them against the aforementioned requirements, sorted by descending popularity percentage from the literature review.
-\begin{center}
+Table~\ref{tab:requirements-summary} lists each language in the long list and checks them against the aforementioned requirements, sorted by descending popularity percentage from the literature review.
+\begin{table}[H]
+\centering
 \begin{tabular}{|l| c c c |}
     \hline
     Language & Popularity & Memory safe & Statically typed \\
@@ -68,7 +69,8 @@ The table below lists each language in the long list and checks them against the
     Rust       & 12\% & Yes & Yes \\
     \hline
 \end{tabular}
-\end{center}
+\caption{\label{tab:requirements-summary} Requirements summary}
+\end{table}
 
 Based on this evaluation, TypeScript and Java appear to be the most promising options. With TypeScript and Java being the two languages currently used internally at TrustBuilder, this selection is especially interesting, as this means the necessary expertise in these languages will already present at the company. 
 

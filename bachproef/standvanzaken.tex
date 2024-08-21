@@ -93,10 +93,10 @@ In February 2024, the White House published a report outlining guidelines to imp
 \subsection{Popular server-side programming languages}
 To determine possibly suitable programming languages, surveys may provide useful data to determine the currently most popular ones. The Stack Overflow Developer Survey 2023 \autocite{StackOverflow2023} and The State of Developer Ecosystem 2023 \autocite{JetBrains2023} each provide statistics on programming language popularity. Based on these results, the four most popular server-side programming languages are JavaScript, Python, Java, and TypeScript. Further popular programming languages include C, C++, C\#, PHP, Go, Kotlin, and Rust.
 
-The table below compares each eligible programming language's popularity according to each survey, and calculates their average. This measure of popularity will later be referenced to make up a long list and determine a short list.
+Table~\ref{tab:language-popularity} compares each eligible programming language's popularity according to each survey, and calculates their average. This measure of popularity will later be referenced to make up a long list and determine a short list.
 
-\begin{center}
-    
+\begin{table}
+\centering
 \begin{tabular}{| l| c c c |}
 \hline
 Language   & JetBrains & Stack Overflow & Average \\
@@ -114,7 +114,8 @@ Kotlin     & 15\%      & 9,06\%         & 12\%    \\
 Rust       & 10\%      & 13,05\%        & 12\%    \\
 \hline
 \end{tabular}
-\end{center}
+\caption{\label{tab:language-popularity}Language popularity}
+\end{table}
 
 
 \subsubsection{JavaScript and TypeScript}
