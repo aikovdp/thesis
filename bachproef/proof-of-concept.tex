@@ -19,8 +19,7 @@ The code examples in the following sections of this chapter are snippets, and of
     \item Java: \url{https://github.com/aikovdp/thesis-poc-java}
 \end{itemize} 
 
-\section{Implementation}
-\subsection{Actions}
+\section{Actions}
 The conceptual ``Actions'' detailed above, units of code accepting input and output, can be represented as functions in both TypeScript and Java. 
 
 The Java implementation in listing~\ref{lst:action-java} takes the form of a generic interface with a single \texttt{execute} method. The interface accepts type parameters \texttt{I} and \texttt{O}, representing the input and output types of the action. The \texttt{execute} method accepts an input of type \texttt{I} and a \texttt{WorkflowContext} object, and produces an output of type \texttt{O}.
@@ -45,8 +44,8 @@ export type Action<Input, Output> =
 \end{listing}
 The Action construct can be elegantly declared in both languages, each in their own idiomatic way.
 
-\subsection{REST API Call Action}
-\subsubsection{TypeScript}
+\section{REST API Call Action}
+\subsection{TypeScript}
 \begin{listing}[h]
     \begin{minted}[fontsize=\footnotesize]{typescript}
 export const getGitHubUserAction: Action<GetGitHubUserActionInput, GithubUser> = 
@@ -61,7 +60,7 @@ Calling a REST API in TypeScript is straightforward. Through the Fetch API, thes
 
 JSON serialization and deserialization is also part of the language specification, making JavaScript and TypeScript even better suited for consuming JSON REST APIs \autocite{EcmaInternational2024}. This is to be expected, considering JavaScript's roots in web browsers. However, in this proof of concept, no validation is performed on the returned object. TypeScript simply casts the parsed response's type to the \texttt{GithubUser} type, without any additional checks or warnings. It is the programmer's responsibility to be aware of this, and validate the response's content accordingly.
 
-\subsubsection{Java}
+\subsection{Java}
 \begin{listing}[h]
     \begin{minted}[fontsize=\footnotesize]{java}
 public class GetGitHubUserAction implements Action<Input, GitHubUser> {
@@ -94,15 +93,15 @@ As of Java 11, the Java platform provides a built-in HTTP Client API, making it 
 
 Additionally, JSON (de)serialization is not part of the Java Platform APIs, requiring a third party library to cover this functionality. In this proof of concept, Google's Gson was chosen. This once again requires additional code and introduces some supply chain risk, but validates the JSON contents when deserializing it into an object of the specified class, unlike TypeScript's unsafe cast.
 
-\subsubsection{Summary}
+\subsection{Summary}
 While TypeScripts provides a quick way to call REST services and covers most functionality out of the box, it drops the ball in terms of safety by default. A happy flow can be written in no time, but the programmer is responsible for taking the necessary safety measures for when something goes wrong, if these scenario's aren't handled by the encompassing framework. What Java lacks in terseness and JSON functionality, it makes up for in safety. It is type safe every step of the way, and requires the programmer to handle exceptions, but as a result is significantly more verbose than TypeScript.
 
-\subsection{Database Query Action}
+\section{Database Query Action}
 % TODO
 \pagebreak
-\subsection{TOTP Verification Action}
+\section{TOTP Verification Action}
 Verifying a TOTP code is a prime example of typical cybersecurity functionality commonly implemented through workflows at TrustBuilder. This makes it an excellent candidate to test a language's suitability for such tasks. As mentioned in the literature review, implementing the TOTP algorithm depends on a couple of additional technologies: Unix time, HMAC, Base32, and bitwise operations. Both implementations here abstract away functionality in three distinct units: the verification action depends on the TOTP generator, which in turn depends on the HOTP generator.
-\subsubsection{TypeScript}
+\subsection{TypeScript}
 Through the use of the Web Cryptography API, an HMAC-SHA1 hash can easily be generated from the provided secret and counter value. However, converting the counter value to its required 8-byte binary representation requires additional measures to be taken due to a lack of specific number types in JavaScript. The \texttt{Number} value needs to be converted to a \texttt{BigInt}, to then be set as an unsigned 64-bit \texttt{BigInt} on the \texttt{DataView} encompassing the \texttt{ArrayBuffer}. This can be seen in listing~\ref{lst:hotp-ts}. Dynamic truncation of the HMAC-SHA1 hash was done using a DataView object, making the bitwise operations relatively trivial.
 \begin{listing}[H]
     \begin{minted}[fontsize=\footnotesize]{typescript}
@@ -203,7 +202,7 @@ export function decode(base32: string) {
     \caption{Base32 decoder in TypeScript}
 \end{listing}
 
-\subsubsection{Java}
+\subsection{Java}
 The Java Cryptography Architecture, encompassing the \texttt{java.security} and \texttt{javax.crypto} packages, provides API for handling the cryptographic key and generating the HMAC-SHA1 hash. Base32 decoding is not bundled with the Java platform either though, also requiring a separate library or custom implementation. With Java having a longer history of being used as a server-side language, its ecosystem of cryptography libraries is able to fill this need easily. This proof of concept uses the Bouncy Castle library to decode the Base32-encoded secret key. 
 \begin{listing}[H]
     \begin{minted}[fontsize=\footnotesize]{java}
@@ -278,8 +277,8 @@ public final class HOTP {
 \end{listing}
 To perform the bitwise operations necessary for the binary representation of the counter value and the dynamic truncation of the HMAC-SHA1 hash, the ByteBuffer class of the Java NIO API is used. The counter conversion is easier here however, as the 8-byte \texttt{long} value can be directly placed into the ByteBuffer. Thanks to Java's more specific numeric types, a host of accidental bugs is avoided here by the type system itself.
 
-\subsubsection{Summary}
+\subsection{Summary}
 With the Web Cryptography API and Java's Cryptography Architecture, both languages are at a similar level of maturity for core cryptographic operations. The surrounding lower-level operations are not however. Java's more precise numeric types make these easier, and its more mature ecosystem offers reputable cryptography libraries TypeScript's cannot provide.
 
-\subsection{Workflow Context}
-\subsection{Testing}
+\section{Workflow Context}
+\section{Testing}
