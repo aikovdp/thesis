@@ -44,6 +44,7 @@ export type Action<Input, Output> =
 \end{listing}
 The Action construct can be elegantly declared in both languages, each in their own idiomatic way.
 
+\pagebreak
 \section{REST API Call Action}
 \subsection{TypeScript}
 \begin{listing}[h]
@@ -61,7 +62,10 @@ Calling a REST API in TypeScript is straightforward. Through the Fetch API, thes
 JSON serialization and deserialization is also part of the language specification, making JavaScript and TypeScript even better suited for consuming JSON REST APIs \autocite{EcmaInternational2024}. This is to be expected, considering JavaScript's roots in web browsers. However, in this proof of concept, no validation is performed on the returned object. TypeScript simply casts the parsed response's type to the \texttt{GithubUser} type, without any additional checks or warnings. It is the programmer's responsibility to be aware of this, and validate the response's content accordingly.
 
 \subsection{Java}
-\begin{listing}[h]
+As of Java 11, the Java platform provides a built-in HTTP Client API, making it easy to call REST APIs without an external library. Compared to the TypeScript implementation of this call, the Java one is significantly more verbose, requiring a try-with-resources statement to handle automatic closure of the client, and handling two checked exceptions. Although this makes the code more robust and determinate, it does make the language less appealing for use in small snippets like Actions. Without checked exceptions, the programmer wouldn't be required to decide on what to do with them, and could let the encompassing framework handle them instead.
+
+Additionally, JSON (de)serialization is not part of the Java Platform APIs, requiring a third party library to cover this functionality. In this proof of concept, Google's Gson was chosen. This once again requires additional code and introduces some supply chain risk, but validates the JSON contents when deserializing it into an object of the specified class, unlike TypeScript's unsafe cast.
+\begin{listing}[H]
     \begin{minted}[fontsize=\footnotesize]{java}
 public class GetGitHubUserAction implements Action<Input, GitHubUser> {
   private static final URI GITHUB_USERS_URI = URI.create("https://api.github.com/users/");
@@ -89,9 +93,6 @@ public class GetGitHubUserAction implements Action<Input, GitHubUser> {
     \end{minted}
     \caption{REST API call in Java}
 \end{listing}
-As of Java 11, the Java platform provides a built-in HTTP Client API, making it easy to call REST APIs without an external library. Compared to the TypeScript implementation of this call, the Java one is significantly more verbose, requiring a try-with-resources statement to handle automatic closure of the client, and handling two checked exceptions. Although this makes the code more robust and determinate, it does make the language less appealing for use in small snippets like Actions. Without checked exceptions, the programmer wouldn't be required to decide on what to do with them, and could let the encompassing framework handle them instead.
-
-Additionally, JSON (de)serialization is not part of the Java Platform APIs, requiring a third party library to cover this functionality. In this proof of concept, Google's Gson was chosen. This once again requires additional code and introduces some supply chain risk, but validates the JSON contents when deserializing it into an object of the specified class, unlike TypeScript's unsafe cast.
 
 \subsection{Summary}
 While TypeScript provides a quick way to call REST services and covers most functionality out of the box, it drops the ball in terms of safety by default. A happy flow can be written in no time, but the programmer is responsible for taking the necessary safety measures for when something goes wrong, if these scenarios are not handled by the encompassing framework. What Java lacks in terseness and JSON functionality, it makes up for in safety. It is type safe every step of the way, and requires the programmer to handle exceptions, but as a result is significantly more verbose than TypeScript.
@@ -315,6 +316,8 @@ export function decode(base32: string) {
 
 \subsection{Java}
 The Java Cryptography Architecture, encompassing the \texttt{java.security} and \texttt{javax.crypto} packages, provides API for handling the cryptographic key and generating the HMAC-SHA1 hash. Base32 decoding is not bundled with the Java platform either though, also requiring a separate library or custom implementation. With Java having a longer history of being used as a server-side language, its ecosystem of cryptography libraries is able to fill this need easily. This proof of concept uses the Bouncy Castle library to decode the Base32-encoded secret key. 
+
+To perform the bitwise operations necessary for the binary representation of the counter value and the dynamic truncation of the HMAC-SHA1 hash, the ByteBuffer class of the Java NIO API is used. The counter conversion is easier here however, as the 8-byte \texttt{long} value can be directly placed into the ByteBuffer. Thanks to Java's more specific numeric types, a host of accidental bugs is avoided here by the type system itself.
 \begin{listing}[H]
     \begin{minted}[fontsize=\footnotesize]{java}
 public class VerifyTOTPAction implements Action<Input, Boolean> {
@@ -386,11 +389,11 @@ public final class HOTP {
     \end{minted}
     \caption{HOTP generator in Java}
 \end{listing}
-To perform the bitwise operations necessary for the binary representation of the counter value and the dynamic truncation of the HMAC-SHA1 hash, the ByteBuffer class of the Java NIO API is used. The counter conversion is easier here however, as the 8-byte \texttt{long} value can be directly placed into the ByteBuffer. Thanks to Java's more specific numeric types, a host of accidental bugs is avoided here by the type system itself.
 
 \subsection{Summary}
 With the Web Cryptography API and Java's Cryptography Architecture, both languages are at a similar level of maturity for core cryptographic operations. The surrounding lower-level operations are not, however. Java's more precise numeric types make these easier, and its more mature ecosystem offers reputable cryptography libraries TypeScript's cannot provide.
 
+\pagebreak
 \section{Workflow Context}
 % TODO
 
