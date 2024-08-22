@@ -395,8 +395,129 @@ With the Web Cryptography API and Java's Cryptography Architecture, both languag
 
 \pagebreak
 \section{Workflow Context}
-% TODO
+Actions like these would be composed together in a ``workflow'', executing the Actions in order and passing data between them. A workflow can also have its own output, which might have to conform to a certain schema depending on where the workflow is being triggered from. Although the design of the encompassing workflow framework is outside the scope of this thesis, passing data from an action into the workflow context could look vastly different in TypeScript than it does in Java. 
 
+This proof of concept implements it according to how this would typically be handled in projects written in each language. The goal of the Action here is to set an ``attribute'' value on the output of the workflow, according to a pre-defined schema. 
+
+\subsection{TypeScript}
+The necessary data schemas take the form of interface declarations in TypeScript. Listing~\ref{lst:ctx-ts} declares the structure of the \texttt{WorkflowContext} object as containing an \texttt{output} object. This \texttt{output} object can contain any properties, but any value in the \texttt{attributes} field must contain an object that satisfies the \texttt{Attributes} interface. 
+\begin{listing}[H]
+\begin{minted}[fontsize=\footnotesize]{typescript}
+export interface WorkflowContext {
+  output: WorkflowOutput;
+}
+
+export interface WorkflowOutput {
+  attributes?: Attributes;
+  [property: string]: any;
+}
+
+export interface Attributes {
+  [category: string]: {
+    [name: string]: string[];
+  };
+}
+\end{minted}
+\caption{\label{lst:ctx-ts}WorkflowContext and Attributes interfaces in TypeScript}
+\end{listing}
+
+The action which sets a given attribute value on the workflow output can do so directly through the context object. Modern JavaScript features allow you to do this concisely through object destructuring, spread syntax (\texttt{...}), and optional chaining. Despite being concise, this may be considered hard to read with this level of nesting. 
+\begin{listing}[H]
+\begin{minted}[fontsize=\footnotesize]{typescript}
+export const setAttributeAction: Action<SetAttributeInput, void> = 
+  async (input, context) => {
+    const { attributes } = context.output
+    context.output.attributes = {
+      ...attributes, 
+      [input.category]: {
+        ...(attributes?.[input.category]),
+        [input.name]: input.value
+      }
+    }
+  }
+
+interface SetAttributeInput {
+  category: string,
+  name: string,
+  value: string[]
+}
+\end{minted}
+\caption{''Set attribute'' Action in TypeScript}
+\end{listing}
+
+\subsection{Java}
+The Java implementation is more structured, but lengthier. To allow developers the freedom to pass any object to the workflow output, the generic \texttt{OutputKey} class was made (listing~\ref{lst:outputkey}). The \texttt{WorkflowOutput} class (listing~\ref{lst:wf-output-java}) delegates to a HashMap, in which the \texttt{path} property of the \texttt{OutputKey} is used as the key. The \texttt{OutputKey}'s type parameter serves as a type guarantee for the data present in the output at that key. By defining \texttt{OutputKey}s, the workflow output can hold any data type, while still containing the expected types at each field.
+\begin{listing}[H]
+\begin{minted}[fontsize=\footnotesize]{java}
+public record OutputKey<T>(String path) {
+    public static final OutputKey<Attributes> ATTRIBUTES = new OutputKey<>("attributes");
+}
+\end{minted}
+\caption{\label{lst:outputkey}The \texttt{OutputKey} class in Java}
+\end{listing}
+
+\begin{listing}[H]
+\begin{minted}[fontsize=\footnotesize]{java}
+public class WorkflowOutput {
+  private final Map<String, Object> output = new HashMap<>();
+
+  public <T> void put(OutputKey<T> key, T value) {
+    output.put(key.path(), value);
+  }
+
+  @SuppressWarnings("unchecked")
+  public <T> T get(OutputKey<T> key) {
+    return (T) output.get(key.path());
+  }
+
+  @SuppressWarnings("unchecked")
+  public <T> T computeIfAbsent(OutputKey<T> key, Function<String, ? extends T> mappingFunction) {
+    return (T) output.computeIfAbsent(key.path(), mappingFunction);
+    }
+}
+\end{minted}
+\caption{\label{lst:wf-output-java}The \texttt{WorkflowOutput} class in Java}
+\end{listing}
+The Attributes class wraps a nested HashMap containing lists of String values. The Action then uses this class to set the attribute value in a strongly typed manner.
+\begin{listing}[H]
+\begin{minted}[fontsize=\footnotesize]{java}
+public class Attributes {
+  private final Map<String, Map<String, List<String>>> attributes = new HashMap<>();
+
+  public void setAttribute(String category, String name, List<String> values) {
+    attributes.computeIfAbsent(category, (key) -> new HashMap<>())
+      .put(name, values);
+    }
+
+  public List<String> getAttribute(String category, String name) {
+    Map<String, List<String>> categoryMap = attributes.get(category);
+    if (categoryMap == null) return null;
+    return categoryMap.get(name);
+  }
+}
+\end{minted}
+\caption{Attributes class in Java}
+\end{listing}
+
+\begin{listing}[H]
+\begin{minted}[fontsize=\footnotesize]{java}
+public class SetAttributeAction implements Action<Input, Void> {
+  @Override
+  public Void execute(Input input, WorkflowContext context) {
+    Attributes attributes = context.getOutput().computeIfAbsent(OutputKey.ATTRIBUTES, (k) -> new Attributes());
+    attributes.setAttribute(input.category(), input.name(), input.values());
+
+    return null;
+  }
+}
+\end{minted}
+\caption{''Set attribute'' Action in Java}
+\end{listing}
+
+\subsection{Summary}
+Both languages are a suitable fit for the presumed framework, though the implementation of it would vary wildly. TypeScript is clearly able to handle loosely structured data more easily though, likely because of its structural type system and its roots in the dynamically typed JavaScript. The idiomatic implementation of this in TypeScript is also drastically more concise.
+
+\pagebreak
 \section{Testing}
 % TODO
 
