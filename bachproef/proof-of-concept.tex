@@ -519,7 +519,37 @@ Both languages are a suitable fit for the presumed framework, though the impleme
 
 \pagebreak
 \section{Testing}
-% TODO
+Tests were written in both languages for all Actions mentioned above. The Actions concept is extremely well suited to unit tests, as they are specific units of code producing a specific output for a given input. Unit tests were written using Vitest for TypeScript and JUnit for Java.
+
+\begin{listing}[H]
+\begin{minted}[fontsize=\footnotesize]{typescript}
+test('returns octocat user', async () => {
+  const user = await getGitHubUserAction({username: "octocat"}, createContext())
+  
+  expect(user.login, "octocat")
+  expect(user.name, "The Octocat")
+  expect(user.company, "@github")
+})
+\end{minted}
+\caption{GitHub API Action test in TypeScript}
+\end{listing}
+
+\begin{listing}[H]
+\begin{minted}[fontsize=\footnotesize]{java}
+public class GetGitHubUserActionTest {
+  @Test
+  public void testGitHubUserAction() {
+    GetGitHubUserAction action = new GetGitHubUserAction();
+    GitHubUser user = action.execute(new GetGitHubUserAction.Input("octocat"), new WorkflowContext());
+
+    assertEquals("octocat", user.login());
+    assertEquals("The Octocat", user.name());
+    assertEquals("@github", user.company());
+  }
+}
+\end{minted}
+\caption{GitHub API Action test in Java}
+\end{listing}
 
 \section{SBOM Generation}
 If customers will be allowed to write their own Actions, they should be required to include an SBOM as discussed in the literature review. Generating a CycloneDX SBOM is trivial for both TypeScript and Java.
