@@ -79,7 +79,7 @@ To implement a Google Authenticator compatible TOTP validator in a specific lang
 \subsection{Language characteristics}
 Before discussing individual programming languages, this section will take a closer look at certain characteristics. Important findings here may later be used in the requirements analysis, and will help in discussing programming languages one by one later on.
 \subsubsection{Memory Safety}
-As defined by the \textcite{Prossimo2021}, memory safety is “a property of some programming languages that prevents programmers from introducing certain types of bugs related to how memory is used.” An example of a bug like this is an out of bounds read or write, such as retrieving or writing the 11th item in a list of 10 items. This operates on data stored outside of the list's bounds, and thus accesses memory that isn't meant to be accessed through there. Another vulnerability scenario, use after free, happens when memory is accessed after the program has freed it, which may contain other data by then.
+As defined by the \textcite{Prossimo2021}, memory safety is “a property of some programming languages that prevents programmers from introducing certain types of bugs related to how memory is used.” An example of a bug like this is an out of bounds read or write, such as retrieving or writing the 11th item in a list of 10 items. This operates on data stored outside of the list's bounds, and thus accesses memory that is not meant to be accessed through there. Another vulnerability scenario, use after free, happens when memory is accessed after the program has freed it, which may contain other data by then.
 
 These memory safety bugs are often at the root of security vulnerabilities, as can be seen in the CWE list of top 10 known exploited vulnerabilities \autocite{CWE2023}. Four out of ten entries in this list are related to memory safety, specifically stating C and C++ as languages prone to these vulnerabilities.
 
@@ -109,7 +109,7 @@ To determine possibly suitable programming languages, surveys may provide useful
 
 Table~\ref{tab:language-popularity} compares each eligible programming language's popularity according to each survey, and calculates their average. This measure of popularity will later be referenced to make up a long list and determine a short list.
 
-\begin{table}[h]
+\begin{table}[H]
 \centering
 \begin{tabular}{| l| c c c |}
 \hline
@@ -152,7 +152,7 @@ As stated on its home page, ``WebAssembly (abbreviated Wasm) is a binary instruc
 Software supply chain vulnerabilities make up two entries in the OWASP Top 10, a document listing some the most critical security risks for web applications: Vulnerable and outdated components, and software and data integrity failures \autocite{OWASPTop102021}. While these factors are not directly tied to programming languages themselves, their ecosystem and its availability of necessary tooling does influence how straightforward it is to mitigate these risks.
 
 \subsection{Software Bill Of Materials}
-One way to mitigate these risks is a software bill of materials, or SBOM for short. It is a document detailing all dependencies, including transitive ones, used in a piece of software \autocite{SBOM2024}. Using these, software authors and consumers are able to identify vulnerable components and monitor their security. Other tools can then scan these SBOMs to generate a list of known vulnerabilities in the used versions of components, and suggest mitigations such as upgrading to patched versions. 
+One way to mitigate these risks is a software bill of materials, or SBOM for short. It is a document detailing all dependencies, including transitive ones, used in a piece of software \autocite{SBOM2024}. Using these, software authors and consumers are able to identify vulnerable components and monitor their security. Other tools can then scan these SBOMs to generate a list of known vulnerabilities in the used versions of components and suggest mitigations such as upgrading to patched versions. 
 According to GitLab's Sandra \textcite{Gittlen2024}, the two most popular SBOM standards at this time are SPDX and CycloneDX.
 
 SPDX is an SBOM standard developed by the Linux Foundation, and first released in 2011 \autocite{SPDXAbout}. In 2021, SPDX specification 2.2.1 was recognized as an ISO standard.
@@ -171,8 +171,7 @@ TrustBuilder's current technology for allowing customization and extension of th
 
 \section{Comparable services}
 \subsection{Auth0 Actions}
-Auth0 is an IAM platform that enables developers to add authentication and authorization services to their applications \autocite{Auth0Overview}. Actions, one of their customization capabilities, let customers ``customize and extend Auth0's capabilities with custom logic'' \autocite{Auth0Actions}. Auth0 Actions are independent Node.js JavaScript functions which can be executed at specific points in identity flows. These functions typically take two parameters as input: an event object, describing an interaction with the platform, and an API object, providing the function implementation with the ability to determine the outcome of the flow, or call other Auth0 APIs relevant to the flow \autocite{Auth0Triggers}. These function are also able to use dependencies from the npm package registry.
-
+Auth0 is an IAM platform that enables developers to add authentication and authorization services to their applications \autocite{Auth0Overview}. Actions, one of their customization capabilities, let customers ``customize and extend Auth0's capabilities with custom logic'' \autocite{Auth0Actions}. Auth0 Actions are independent Node.js JavaScript functions which can be executed at specific points in identity flows. These functions typically take two parameters as input: an event object and an API object \autocite{Auth0Triggers}. The event object describes an interaction with the platform. The API object provides the function implementation with the ability to determine the outcome of the flow, or call other Auth0 APIs relevant to the flow. These function are also able to use dependencies from the npm package registry.
 
 
 \subsection{Cloudflare Workers}

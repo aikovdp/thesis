@@ -94,8 +94,9 @@ As of Java 11, the Java platform provides a built-in HTTP Client API, making it 
 Additionally, JSON (de)serialization is not part of the Java Platform APIs, requiring a third party library to cover this functionality. In this proof of concept, Google's Gson was chosen. This once again requires additional code and introduces some supply chain risk, but validates the JSON contents when deserializing it into an object of the specified class, unlike TypeScript's unsafe cast.
 
 \subsection{Summary}
-While TypeScripts provides a quick way to call REST services and covers most functionality out of the box, it drops the ball in terms of safety by default. A happy flow can be written in no time, but the programmer is responsible for taking the necessary safety measures for when something goes wrong, if these scenario's aren't handled by the encompassing framework. What Java lacks in terseness and JSON functionality, it makes up for in safety. It is type safe every step of the way, and requires the programmer to handle exceptions, but as a result is significantly more verbose than TypeScript.
+While TypeScript provides a quick way to call REST services and covers most functionality out of the box, it drops the ball in terms of safety by default. A happy flow can be written in no time, but the programmer is responsible for taking the necessary safety measures for when something goes wrong, if these scenario's aren't handled by the encompassing framework. What Java lacks in terseness and JSON functionality, it makes up for in safety. It is type safe every step of the way, and requires the programmer to handle exceptions, but as a result is significantly more verbose than TypeScript.
 
+\pagebreak
 \section{Database Query Action}
 % TODO
 \pagebreak
