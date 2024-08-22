@@ -89,6 +89,21 @@ In February 2024, the White House published a report outlining guidelines to imp
 
 \subsubsection{Type systems}
 % TODO: Explain static and dynamic typing, impact on bugs
+Programming languages can be categorized into two groups depending on their type system. In a statically-typed language, data types of variables are determined at compile time, whereas in a dynamically-typed language, these are assigned at runtime \autocite{MDNStaticTyping,MDNDynamicTyping}. When a variable is used incorrectly (e.g. a non-existent property is accessed on an object or an integer is being multiplied by a string), a type-checked program will return a type error. In a dynamically-typed language this would happen at runtime, but a statically typed language could catch this at compile time. This way, the static type checker prevents invalid programs from compiling. It may, however, also prevent some valid programs from compiling \autocite{Mitchell1990}. The programmer could know the program is correct, but the type system might not.
+
+Static typing does bring some valuable benefits with it however: \textcite{Gao2017} evaluated how well TypeScript and Flow, statically typed supersets of JavaScript, were able to catch bugs in public JavaScript projects. Despite this research only applying to bugs which had already made it past testing and review, they found that TypeScript and Flow were able to detect 15\% of bugs. This demonstrates that static type checking is a valuable tool for preventing bugs before they can make it to production.
+
+Another study by \textcite{Zhang2021} analyzed bug resolution data from popular GitHub projects and ``found evidence for a lower elapsed resolution time for bug resolution committed to projects constructed from statically typed languages''. This shows that in addition to preventing a significant proportion of bugs, static type systems may also help resolve them more quickly.
+
+Finally, \textcite{Endrikat2014} found that ``static type systems [act] as a form of implicit documentation'', with this effect being even more apparent with explicit documentation. On the other hand, the benefits of dynamically typed languages were not as strongly strengthened by explicit documentation. 
+
+
+\subsubsection{Summary}
+Considering the cybersecurity space in which TrustBuilder operates, existing literature provides clear guidance for selecting certain programming languages by their characteristics. 
+
+Memory unsafe languages such as C and C++ are widely panned for their detrimental impact on the security of applications, making them decisively unfit for this use case. 
+
+Statically typed languages exhibit compelling characteristics which can help make software more robust by raising type errors at compile time instead of at runtime. They help prevent bugs, help resolve bugs more quickly, and serve as valuable documentation even in addition to explicit documentation. These are all qualities which would be of significant value in a customer-facing security product.
 
 \subsection{Popular server-side programming languages}
 To determine possibly suitable programming languages, surveys may provide useful data to determine the currently most popular ones. The Stack Overflow Developer Survey 2023 \autocite{StackOverflow2023} and The State of Developer Ecosystem 2023 \autocite{JetBrains2023} each provide statistics on programming language popularity. Based on these results, the four most popular server-side programming languages are JavaScript, Python, Java, and TypeScript. Further popular programming languages include C, C++, C\#, PHP, Go, Kotlin, and Rust.
