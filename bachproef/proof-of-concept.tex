@@ -99,6 +99,116 @@ While TypeScript provides a quick way to call REST services and covers most func
 \pagebreak
 \section{Database Query Action}
 % TODO
+Apart from REST APIs, workflows also often query databases directly. The Actions on display in this section query a user by their from a SQLite database created with the SQL statements in listing~\ref{lst:sqlite}.
+\begin{listing}[H]
+    \begin{minted}[fontsize=\footnotesize]{sql}
+CREATE TABLE users
+(
+  id          INTEGER PRIMARY KEY AUTOINCREMENT,
+  username    TEXT NOT NULL,
+  given_name  TEXT,
+  family_name TEXT,
+  email       TEXT NOT NULL
+);
+
+CREATE UNIQUE INDEX users_email_uindex
+ON users (email);
+
+CREATE UNIQUE INDEX users_username_uindex
+ON users (username);
+
+INSERT INTO users (id, username, given_name, family_name, email) 
+VALUES (1, 'jsmith', 'John', 'Smith', 'jsmith@example.org');
+  
+INSERT INTO users (id, username, given_name, family_name, email) 
+VALUES (2, 'jdoe', 'Jane', 'Doe', 'jdoe@example.com');
+    \end{minted}
+    \caption{\label{lst:sqlite}DDL and seed for SQLite database}
+\end{listing}
+\subsection{Java}
+The Java implementation of this Action in listing~\ref{lst:db-java} uses the JDBI library, a lightweight wrapper around JDBC, which in turn is Java's built-in database connectivity API. It provides simple access to a database via a JDBC URL, and the ability to map a query result to an object. This implementation is quite straightforward.
+\begin{listing}[H]
+    \begin{minted}[fontsize=\footnotesize]{java}
+public class GetDatabaseUserAction implements Action<Input, DatabaseUser> {
+            
+  private final Jdbi jdbi;
+            
+  public GetDatabaseUserAction(String url) {
+    this.jdbi = Jdbi.create(url);
+  }
+            
+  @Override
+  public DatabaseUser execute(Input input, WorkflowContext context) {
+    return jdbi.withHandle(handle ->
+      handle.createQuery("SELECT id, given_name, family_name, username, email FROM users WHERE username = :username")
+        .bind("username", input.username)
+        .map((rs, ctx) -> new DatabaseUser(
+            rs.getInt("id"),
+            rs.getString("given_name"),
+            rs.getString("family_name"),
+            rs.getString("username"),
+            rs.getString("email")
+          )
+        ).one()
+      );
+  }
+            
+  public record Input(
+    String username
+  ) {}
+            
+  public record DatabaseUser(
+    int id,
+    String givenName,
+    String familyName,
+    String username,
+    String email
+  ) { }
+}
+    \end{minted}
+    \caption{\label{lst:db-java}Database query action in Java}
+\end{listing}
+
+\subsection{TypeScript}
+TypeScript has no equivalent for JDBC, so it has to rely entirely on external libraries. This implementation (listing~\ref{lst:db-ts}) uses Drizzle, a lightweight TypeScript object-relational mapper (ORM). The ORM requires defining the database schema in the code, but is then able to provide a type-safe interface through which the database can be queried, along with automatic object mapping, and detailed code completion hints. This is a prime example implicit documentation as mentioned in the literature review as one of the benefits of statically typed languages. 
+
+It should also be noted that even despite this extra ORM functionality in the TypeScript implementation, it still contains less lines of code than the Java implementation. 
+\begin{listing}[H]
+    \begin{minted}[fontsize=\footnotesize]{typescript}
+const users = sqliteTable('users', {
+  id: integer('id').primaryKey(),
+  givenName: text("given_name"),
+  familyName: text("family_name"),
+  username: text("username").notNull(),
+  email: text("email").notNull()
+})
+
+const db = drizzle(new Database('database.db'), {schema: {users: users}})
+
+export const getDbUser: Action<GetDbUserActionInput, DbUser | undefined> = 
+  async (input) => {
+    return await db.query.users.findFirst({
+      where: eq(users.username, input.username)
+    })
+}
+
+interface GetDbUserActionInput {
+  username: string
+}
+
+interface DbUser {
+  id: number,
+  givenName?: string | null,
+  familyName?: string | null,
+  username: string,
+  email: string
+}
+    \end{minted}
+    \caption{\label{lst:db-ts}Database query action in TypeScript}
+\end{listing}
+\subsection{Summary}
+The database querying capabilities of Java and TypeScript cannot be properly compared based on these two pieces of code alone, but both languages are able to query databases with ease. Java has its JDBC API, which standardizes how Java applications communicate with databases, upon which other libraries can rely. Although TypeScript doesn't have this standard API, other libraries like Drizzle still provide lean ways to query a databases, with full ORM functionality providing type-safe querying interfaces, automatic object mapping and useful code completion.
+
 \pagebreak
 \section{TOTP Verification Action}
 Verifying a TOTP code is a prime example of typical cybersecurity functionality commonly implemented through workflows at TrustBuilder. This makes it an excellent candidate to test a language's suitability for such tasks. As mentioned in the literature review, implementing the TOTP algorithm depends on a couple of additional technologies: Unix time, HMAC, Base32, and bitwise operations. Both implementations here abstract away functionality in three distinct units: the verification action depends on the TOTP generator, which in turn depends on the HOTP generator.
