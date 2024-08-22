@@ -398,7 +398,22 @@ With the Web Cryptography API and Java's Cryptography Architecture, both languag
 % TODO
 
 \section{SBOM Generation}
-% TODO
+If customers will be allowed to write their own Actions, they should be required to include an SBOM as discussed in the literature review. Generating a CycloneDX SBOM is trivial for both TypeScript and Java.
+
+In the TypeScript project, for which the pnpm package manager was used, the first-party CycloneDX Generator can be installed through pnpm itself. It can then generate an SBOM for the project with a single command:
+\mint{pwsh}|pnpm cdxgen -t pnpm -o bom.json|
+
+In the Java project, made with the Gradle Build Tool, the official CycloneDX Gradle plugin can be applied in the build script as shown in listing~\ref{lst:gradle-plugins}. The SBOM can then be generated simply by running the \texttt{cyclonedxBom} task.
+\begin{listing}[H]
+\begin{minted}[highlightlines={3}]{kotlin}
+plugins {
+  `java-library`
+  id("org.cyclonedx.bom") version "1.8.2"
+}
+\end{minted}
+\caption{\label{lst:gradle-plugins}Plugin configuration in Gradle build script}
+\end{listing}
+Neither language is better suited to this than the other, and this task will likely also be trivial in most other popular languages that use a package manager.
 
 \section{Other Findings}
 % TODO
