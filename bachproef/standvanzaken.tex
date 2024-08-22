@@ -77,7 +77,7 @@ To implement a Google Authenticator compatible TOTP validator in a specific lang
 
 \section{Server-side languages}
 \subsection{Language characteristics}
-Before discussing individual programming languages % TODO
+Before discussing individual programming languages, this section will take a closer look at certain characteristics. Important findings here may later be used in the requirements analysis, and will help in discussing programming languages one by one later on.
 \subsubsection{Memory Safety}
 As defined by the \textcite{Prossimo2021}, memory safety is “a property of some programming languages that prevents programmers from introducing certain types of bugs related to how memory is used.” An example of a bug like this is an out of bounds read or write, such as retrieving or writing the 11th item in a list of 10 items. This operates on data stored outside of the list's bounds, and thus accesses memory that isn't meant to be accessed through there. Another vulnerability scenario, use after free, happens when memory is accessed after the program has freed it, which may contain other data by then.
 
@@ -95,7 +95,7 @@ To determine possibly suitable programming languages, surveys may provide useful
 
 Table~\ref{tab:language-popularity} compares each eligible programming language's popularity according to each survey, and calculates their average. This measure of popularity will later be referenced to make up a long list and determine a short list.
 
-\begin{table}
+\begin{table}[h]
 \centering
 \begin{tabular}{| l| c c c |}
 \hline
@@ -134,7 +134,7 @@ Java is a general-purpose object-oriented programming language \autocite{Lindhol
 \subsubsection{WebAssembly}
 As stated on its home page, ``WebAssembly (abbreviated Wasm) is a binary instruction format [...] designed as a portable compilation target for programming languages, enabling deployment on the web for client and server applications'' \autocite{WebAssembly}. Although it is not a programming language itself, a runtime environment that can run Wasm applications would be able to run applications written in a variety of languages, such as C, C++, and Rust \autocite{EmscriptenContributors2015, RWWG2023}.
 
-\section{Software Supply Chain Security Risks}
+\section{Software Supply Chain Security}
 Software supply chain vulnerabilities make up two entries in the OWASP Top 10, a document listing some the most critical security risks for web applications: Vulnerable and outdated components, and software and data integrity failures \autocite{OWASPTop102021}. While these factors are not directly tied to programming languages themselves, their ecosystem and its availability of necessary tooling does influence how straightforward it is to mitigate these risks.
 
 \subsection{Software Bill Of Materials}
