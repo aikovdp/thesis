@@ -36,7 +36,13 @@
 \IfLanguageName{english}{%
 \selectlanguage{dutch}
 \chapter*{Samenvatting}
-\lipsum[1-4]
+Identity \& Access Management (IAM) systemen moet nauw kunnen integreren met user-facing applicaties an andere systemen. Om dit te verwezelijken laten IAM-services klanten toe om scripts te schrijven die hun systemen kunnen customizen en uitbreiden. TrustBuilder, een Europees IAM-bedrijf, wil hun extensiesysteem genaamd ``workflows'' herwerken. Om dit te doen willen ze weten welke talen zo'n extensions best in geschreven kunnen worden. Momenteel is dit een verouderde versie van JavaScript, en dat brengt wat moeilijkheden met zich mee.
+
+Dit thesis onderzocht welke talen de beste keus zouden zijn voor extensions in TrustBuilders IAM-platform. Het onderzocht ook wat de belangrijkste requirements zouden zijn voor die keuze, de voor- en nadelen van die keuze, en hun impact op security. De bevindingen uit dit onderzoek, samen met hun context, zou TrustBuilder dan kunnen helpen om deze fundamentele beslissing met zekerheid te maken.
+
+Het onderzoek bestond uit een vergeleikende studie die evalueerde hoe verschillende talen zouden passen binnen TrustBuilders workflow-systeem. Gebaseerd op de bevindingen uit de literatuurstudie en de evaluatie van de requirements, waren TypeScript en Java dan geselecteerd als de veelbelovendste kandidaten. Er werd dan een proof of concept gemaakt in beide talen, dat functionaliteit implementeerde die vaak voorkomt in workflows van TrustBuilder. Dit zou dan verder duidelijk maken hoe goed deze talen passen in de praktijk.
+
+Zoals verwacht waren TypeScript en Java allebei uitstekende keuzes, maar hebben ze allebei hun eigen voor- en nadelen. Java bleek meer betrouwbaar te zijn, met een meer volwassen ecosysteem en een grotere focus op veiligheid. TypeScript bood echter meer eenvoudigheid, wat mogelijks beter past voor een customer-facing extensiesysteem. Er zou dan wel meer aandacht moeten besteed worden aan de keuze van de tech stack. Met behulp van de requirements die verzameld werden als onderdeel van dit thesis, samen met de proof of concept, kan TrustBuilder ook andere talen evalueren. Dit laat ze dan toe om hun keuze met zekerheid te maken.
 \selectlanguage{english}
 }{}
 
@@ -45,4 +51,12 @@
 
 \chapter*{\IfLanguageName{dutch}{Samenvatting}{Abstract}}
 
-\lipsum[1-4]
+
+
+Identity and Access Management (IAM) systems need tight integration with user-facing applications and other systems. To achieve this, IAM services allow writing scripts that can customize and extend their systems. TrustBuilder, a European IAM company, wants to overhaul their workflows, a low-code customization system, and needs to know what language(s) they should allow custom extensions to be written in. The current system uses an outdated version of JavaScript, which brings some difficulties with it.
+
+This thesis investigated which languages would be the best choice for writing extensions to TrustBuilder's IAM platform. It also investigated what key requirements the languages should be evaluated against, the pros and cons of certain language choices, and their security implications. The findings of this research, along with its context, would then be able to assist TrustBuilder in making this fundamental decision with certainty.
+
+A comparative study was conducted to evaluate the suitability of different languages for usage in TrustBuilder's workflow system. Based on findings from the literature review and evaluation of requirements, TypeScript and Java were selected as the most promising candidates. A proof of concept implementing workloads commonly handled in TrustBuilder's workflows was then made for both languages, to further understand how well-suited they are in practice.
+
+As was expected, both TypeScript and Java are excellent choices, but they both have their pros and cons. Java proved to be more reliable, with a more mature ecosystem and a bigger focus on safety. TypeScript offered more simplicity however, which may be better suited to a customer-facing extension system, though more care would have to be taken in choosing the tech stack. Using the requirements collected as part of this thesis and the proof of concept, TrustBuilder may also validate additional languages and their advantages, helping them make their decision with certainty.

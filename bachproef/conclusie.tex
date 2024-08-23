@@ -14,5 +14,27 @@
 % Heeft het onderzoek geleid tot nieuwe vragen die uitnodigen tot verder 
 %onderzoek?
 
-\lipsum[76-80]
+The purpose of this study was to assist TrustBuilder in choosing a language in which extensions to their IAM platform could be written. It investigated key requirements for the language, the security implications of the language choice, and pros and cons of two recommended choices.
+Through the requirements analysis and proof of concept, it has become clear that TypeScript and Java can both be recommended for this task, but both have their own distinct strengths and weaknesses.
 
+Key requirements, explored in the literature review and detailed in the requirements analysis, were that the language is popular, statically typed, and memory safe. Language popularity would ensure customers are more likely to possess the skills required to write their own extensions, and their surrounding ecosystems would be more evolved. Static typing in programming languages helps avoid bugs, helps bugs be fixed faster, and even serves as valuable implicit documentation. Lastly, memory safety is an absolute must. Memory safety vulnerabilities are some of the most prevalent types of vulnerabilities in software, and using a memory-safe programming language avoids these altogether. In this sense, the language choice has a direct result on the security of the operation. Memory unsafe languages must be avoided at all costs.
+
+\vspace{11pt}
+
+The proof of concept was able to further showcase the pros and cons of using Java or TypeScript to develop Actions. With workflows primarily being used to integrate with external services, REST API consumption and database connectivity are instrumental. Both languages are well-equipped for this. TypeScript, building on JavaScripts ecosystem and its history in the browser, is better equipped at consuming REST APIs elegantly without the need for external libraries, but is more prone to errors. Java takes a more defensive approach, requiring the programmer to handle potential errors, but also requires an external library to parse JSON strings.
+
+For cybersecurity tasks such as validating TOTP codes, they also show good capabilities, each being equipped with a robust cryptography API. TypeScript's ecosystem is less developed when it comes to cryptography however, lacking a trustworthy platform-agnostic base32 library.
+
+Both are well suited for the presumed Actions system, though TypeScript provides leaner ways to do so, requiring significantly less code.
+
+Unit testing and SBOM generation is trivial for both languages, yet vitally important. Considering how easy both concepts are to apply to both TypeScript and Java, TrustBuilder should absolutely make use of them regardless of their final language choice.
+
+Throughout the proof of concept, TypeScript consistently proved to be significantly more terse than Java. Implementation in Java was more robust however, and its ecosystem has converged more towards singular industry-standard library choices for certain functionality. TypeScript's ecosystem is more fractured in comparison and is changing rapidly.
+
+\vspace{11pt}
+
+If TrustBuilder wants to create a robust extension system with a mature tech stack that will hold up throughout the years, Java is an excellent choice. The Java platform and its ecosystem are well-equipped for typical workflow use cases. The language offers rigorous safety mechanisms, albeit at the cost of simplicity.
+
+If TrustBuilder wants an attractive customer-facing custom extensions API, TypeScript may be the better choice. It can generally handle all use cases with significantly simpler code than a typical Java equivalent. However, TrustBuilder should take care to choose their tech stack wisely for these to prevent falling behind on industry trends. It may also be prudent to provide a utility library covering certain functionality for which the ecosystem lacks reputable third party libraries, such as base32 decoding.
+
+Both TypeScript and Java are fine choices for TrustBuilder’s case, but others may be excellent as wel. This thesis focused on these two because of their popularity and the existing internal experience with them at TrustBuilder. Following the requirements mentioned earlier and a similar proof of concept, TrustBuilder could also verify how other languages such as Kotlin, Rust or Go might function in their next generation of workflows.
