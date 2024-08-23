@@ -37,16 +37,15 @@ This list serves as the long list mentioned in the methodology chapter.
 As mentioned in the literature review, memory safety issues are an extremely common cause for security vulnerabilities. This would make it absolutely irresponsible to use a language that is not memory-safe in an environment so specifically built around cybersecurity. This decisively rules out C and C++ as possible options.
 
 \section{Static Types}
-% TODO
+The literature review has shown that statically typed languages exhibit many advantages relevant to the extension system. They help prevent bugs, help fix them more quickly, and also serve as implicit documentation.
+
+In the current system, using JavaScript, this lack of implicit documentation is clearly felt. Knowing the structure of the input received from a workflow and its expected output requires looking up external documentation. A statically typed language could be of great help here, and would make writing custom extensions more accessible to customers.
 
 \section{Performance}
 Considering these actions will be executed in response to network calls, and will typically make network calls (such as database queries and HTTP requests) themselves, the performance impact of the programming language choice will be negligible compared to the time the network calls take up. For this reason, performance is not a relevant requirement in this specific case.
 
-\section{Readability}
-% TODO
-
-\section{Testing}
-% TODO
+\section{Testability}
+Because of the outdated infrastructure around the current workflow system, testing them is no easy feat. In the next generation of workflows, the possibility to write unit tests will be of great importance. As such, the language's ecosystem should provide a reliable testing library. This can be assumed to be the case for most popular programming languages however, and will further be explored in the proof of concept. 
 
 \section{Final evaluation}
 Table~\ref{tab:requirements-summary} lists each language in the long list and checks them against the aforementioned requirements, sorted by descending popularity percentage from the literature review.
@@ -57,7 +56,7 @@ Table~\ref{tab:requirements-summary} lists each language in the long list and ch
     Language & Popularity & Memory safe & Statically typed \\
     \hline
     JavaScript & 62\% & Yes & No \\
-    Python     & 52\% & Yes & No \\
+    Python     & 52\% & Yes & Certain aspects \\
     Java       & 40\% & Yes & Yes \\
     TypeScript & 36\% & Yes & Yes \\
     C++        & 24\% & No  & Yes \\
@@ -74,4 +73,4 @@ Table~\ref{tab:requirements-summary} lists each language in the long list and ch
 
 Based on this evaluation, TypeScript and Java appear to be the most promising options. With TypeScript and Java being the two languages currently used internally at TrustBuilder, this selection is especially interesting, as this means the necessary expertise in these languages will already present at the company. 
 
-In the following chapter, a proof of concept will be made in each of these languages to further compare them and their suitability.
+These are basic requirements however, and these do not provide an in-depth view at how well these languages would fit in practice. In the following chapter, a proof of concept will be made in both Java and TypeScript to further compare them and their suitability.
