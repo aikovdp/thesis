@@ -1,0 +1,6 @@
+[submodule "proof-of-concept/ts"]
+	path = proof-of-concept/ts
+	url = https://github.com/aikovdp/thesis-poc-ts.git
+[submodule "proof-of-concept/java"]
+	path = proof-of-concept/java
+	url = https://github.com/aikovdp/thesis-poc-java.git
