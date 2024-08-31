@@ -6,6 +6,8 @@
 
 \documentclass[a0,portrait,english]{hogent-poster}
 
+\usepackage[table]{xcolor}
+
 % Info over de opleiding
 \course{Bachelorproef}
 \studyprogramme{toegepaste informatica}
@@ -39,48 +41,60 @@ The nose? On second thoughts, let's not go there. It is a silly place. Bloody Pe
 \begin{multicols}{2} % This is how many columns your poster will be broken into, a portrait poster is generally split into 2 columns
 
 \section{Introduction}
+TrustBuilder, a European Identity \& Access Management (IAM) company, wants to overhaul its extension system. It is currently part of a monolithic Java application, where JavaScript is used to script what they call Workflows. This system is quite outdated however, and they wish to overhaul it entirely and make it part of their new microservice architecture. To assist them in this task, this thesis researches \textbf{which languages would be the best choice for scripting extensions for the TrustBuilder IAM platform.} This encompasses the following sub-questions: 
+\begin{itemize}
+    \item{What are the key indicators these languages should be evaluated against?}
+    \item{What would be the pros and cons of specific language choices?}
+    \item{What are the security implications of specific language choices?}
+\end{itemize}
 
-Be quiet! Found them? In Mercia?! The coconut's tropical! But you are dressed as one… Well, what do you want? Knights of Ni, we are but simple travelers who seek the enchanter who lives beyond these woods.
 
-Well, what do you want? It's only a model. Camelot! We found them. We shall say `Ni' again to you, if you do not appease us.
-
-The nose? Shut up! Burn her! I am your king. You don't vote for kings.
-
-You can't expect to wield supreme power just `cause some watery tart threw a sword at you! Well, we did do the nose. I don't want to talk to you no more, you empty-headed animal food trough water! I fart in your general direction! Your mother was a hamster and your father smelt of elderberries! Now leave before I am forced to taunt you a second time!
-
-Why do you think that she is a witch? We want a shrubbery!! I don't want to talk to you no more, you empty-headed animal food trough water! I fart in your general direction! Your mother was a hamster and your father smelt of elderberries! Now leave before I am forced to taunt you a second time!
-
-\section{Experimenten}
-
-A newt? Camelot! Why? No, no, no! Yes, yes. A bit. But she's got a wart.
-
-Shut up! I dunno. Must be a king. Who's that then? Look, my liege! On second thoughts, let's not go there. It is a silly place.
-
-Shut up! Will you shut up?! No, no, no! Yes, yes. A bit. But she's got a wart. He hasn't got shit all over him. It's only a model. It's only a model.
-
-Bring her forward! I don't want to talk to you no more, you empty-headed animal food trough water! I fart in your general direction! Your mother was a hamster and your father smelt of elderberries! Now leave 
-
-\section{Sectie met figuur}
-
-De {\LaTeX} figure-omgeving bepaalt zelf waar een afbeelding komt en dat is meestal niet op de plek in de tekst waar de figure-omgeving gedefinieerd wordt. Als je wilt forceren dat afbeeldingen toch in de flow van de tekst blijven, dan kan je dat zoals hieronder:
+\section{Methodology}
+To provide an answer to these questions, an extensive literature was first performed to gain insights into IAM standards, comparable platforms, and popular languages and their attributes. A long list of the most popular languages was then evaluated against the requirements gathered through the literature review, to arrive at a short list of 2 languages. These two languages were put to the test in a proof of concept implementing functionality commonly found in TrustBuilder's Workflows. Finally, the findings from this research are summarized in a conclusion, along with guidelines for future research.
 
 \begin{center}
   \captionsetup{type=figure}
-  \includegraphics[width=1.0\linewidth]{grail}
-  \captionof{figure}{He hasn't got shit all over him. The nose? Where'd you get the coconuts? What do you mean? We shall say `Ni' again to you, if you do not appease us}
+  \includegraphics[width=0.4\linewidth]{methodology.png}
+  \captionof{figure}{A flowchart representation of the methodology}
 \end{center}
 
-Let er wel op dat dit tot problemen met bladschikking kan leiden.
+\section{Initial requirements analysis and selection}
+
+As customers should be able to write their own extensions, language popularity is an important factor. However, two other notable requirements were found as part of the literature review: memory safety and static typing. Memory safety issues are at the root of many security vulnerabilities, decisively ruling out memory unsafe languages such as C and C++. Static type systems on the other hand help avoid bugs, fix bugs more quickly, an serve as implicit documentation. This certainly makes statically typed languages more appealing candidates.
+
+
+\begin{center}
+  \captionsetup{type=table}
+  \begin{tabular}{|l| c c c |}
+    \hline
+    Language & Popularity & Memory safe & Statically typed \\
+    \hline
+    JavaScript & 62\% & Yes & No \\
+    Python     & 52\% & Yes & Certain aspects \\
+    Java       & 40\% & Yes & Yes \\
+    TypeScript & 36\% & Yes & Yes \\
+    C++        & 24\% & \textcolor{red}{\textbf{No}}  & Yes \\
+    C\#        & 24\% & Yes & Yes \\
+    C          & 19\% & \textcolor{red}{\textbf{No}}  & Yes \\
+    PHP        & 18\% & Yes & Certain aspects \\
+    Go         & 15\% & Yes & Yes \\
+    Kotlin     & 12\% & Yes & Yes \\
+    Rust       & 12\% & Yes & Yes \\
+    \hline
+\end{tabular}
+  \captionof{table}{Requirements summary}
+\end{center}
+
+Checking the long list of the most popular programming languages against memory safety and type safety requirements, Java and TypeScript emerge as the most promising options to explore further in a proof of concept. These are also the two languages used by TrustBuilder's own development teams, making them even more valuable options.
 
 \section{Conclusions}
 
-Don't underestimate the Force. Oh God, my uncle. How am I ever gonna explain this? I suggest you try it again, Luke. This time, let go your conscious self and act on instinct. Don't be too proud of this technological terror you've constructed. The ability to destroy a planet is insignificant next to the power of the Force.
+
+As was expected, both TypeScript and Java are excellent choices, but they both have their pros and cons. Java proved to be more reliable, with a more mature ecosystem and a bigger focus on safety. TypeScript offered more simplicity however, which may be better suited to a customer-facing extension system, though more care would have to be taken in choosing the tech stack.
 
 \section{Future research}
 
-I care. So, what do you think of her, Han? No! Alderaan is peaceful. We have no weapons. You can't possibly… I have traced the Rebel spies to her. Now she is my only link to finding their secret base.
-
-Kid, I've flown from one side of this galaxy to the other. I've seen a lot of strange stuff, but I've never seen anything to make me believe there's one all-powerful Force controlling everything. There's no mystical energy field that controls my destiny. It's all a lot of simple tricks and nonsense. You are a part of the Rebel Alliance and a traitor! Take her away! 
+Both TypeScript and Java are fine choices for TrustBuilder’s case, but others may be excellent as well. This thesis focused on these two because of their popularity and the existing internal experience with them at TrustBuilder. Following the requirements mentioned earlier and a similar proof of concept, TrustBuilder could also verify how other languages such as Kotlin, Rust or Go might function in their next generation of workflows.
 
 \end{multicols}
 \end{document}
