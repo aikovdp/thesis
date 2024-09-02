@@ -63,24 +63,24 @@ As customers should be able to write their own extensions, language popularity i
 
 \begin{center}
   \captionsetup{type=table}
-  \begin{tabular}{|l| c c c |}
+  \begin{tabular}{|l| c c |}
     \hline
-    Language & Popularity & Memory safe & Statically typed \\
+    Language & Memory safe & Statically typed \\
     \hline
-    JavaScript & 62\% & Yes & No \\
-    Python     & 52\% & Yes & Certain aspects \\
-    Java       & 40\% & Yes & Yes \\
-    TypeScript & 36\% & Yes & Yes \\
-    C++        & 24\% & \textcolor{red}{\textbf{No}}  & Yes \\
-    C\#        & 24\% & Yes & Yes \\
-    C          & 19\% & \textcolor{red}{\textbf{No}}  & Yes \\
-    PHP        & 18\% & Yes & Certain aspects \\
-    Go         & 15\% & Yes & Yes \\
-    Kotlin     & 12\% & Yes & Yes \\
-    Rust       & 12\% & Yes & Yes \\
+    JavaScript & Yes & No \\
+    Python     & Yes & Certain aspects \\
+    Java       & Yes & Yes \\
+    TypeScript & Yes & Yes \\
+    C++        & \textcolor{red}{\textbf{No}}  & Yes \\
+    C\#        & Yes & Yes \\
+    C          & \textcolor{red}{\textbf{No}}  & Yes \\
+    PHP        & Yes & Certain aspects \\
+    Go         & Yes & Yes \\
+    Kotlin     & Yes & Yes \\
+    Rust       & Yes & Yes \\
     \hline
 \end{tabular}
-  \captionof{table}{Requirements summary}
+  \captionof{table}{Requirements summary for popular server-side programming languages, ordered by descending popularity}
 \end{center}
 
 Checking the long list of the most popular programming languages against memory safety and type safety requirements, Java and TypeScript emerge as the most promising options to explore further in a proof of concept. These are also the two languages used by TrustBuilder's own development teams, making them even more valuable options.
