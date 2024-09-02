@@ -39,7 +39,7 @@ TrustBuilder, an IAM company, wants to rework their extension system, and resear
 \begin{multicols}{2} % This is how many columns your poster will be broken into, a portrait poster is generally split into 2 columns
 
 \section{Introduction}
-TrustBuilder, a European Identity \& Access Management (IAM) company, wants to overhaul its extension system. It is currently part of a monolithic Java application, where JavaScript is used to script what they call Workflows. This system is quite outdated however, and they wish to overhaul it entirely and make it part of their new microservice architecture. To assist them in this task, this thesis researches \textbf{which languages would be the best choice for scripting extensions for the TrustBuilder IAM platform.} This encompasses the following sub-questions: 
+TrustBuilder, a European Identity \& Access Management (IAM) company, wants to overhaul its extension system. It is currently part of a monolithic Java application, where JavaScript is used to script what they call Workflows. This system is quite outdated however, and they wish to overhaul it entirely and make it part of their new microservice architecture. To assist them in this task, this thesis researches \textbf{which languages would be the best choice for developing custom extensions for the TrustBuilder IAM platform.} This encompasses the following sub-questions: 
 \begin{itemize}
     \item{What are the key indicators these languages should be evaluated against?}
     \item{What would be the pros and cons of specific language choices?}
@@ -48,7 +48,7 @@ TrustBuilder, a European Identity \& Access Management (IAM) company, wants to o
 
 
 \section{Methodology}
-To provide an answer to these questions, an extensive literature was first performed to gain insights into IAM standards, comparable platforms, and popular languages and their attributes. A long list of the most popular languages was then evaluated against the requirements gathered through the literature review, to arrive at a short list of 2 languages. These two languages were put to the test in a proof of concept implementing functionality commonly found in TrustBuilder's Workflows. Finally, the findings from this research are summarized in a conclusion, along with guidelines for future research.
+To provide an answer to these questions, an extensive literature review was first performed to gain insights into IAM standards, comparable platforms, and popular languages and their attributes. A long list of the most popular languages was then evaluated against the requirements gathered through the literature review, to arrive at a short list of 2 languages. These two languages were put to the test in a proof of concept implementing functionality commonly found in TrustBuilder's Workflows. Finally, the findings from this research are summarized in a conclusion, along with guidelines for future research.
 
 \begin{center}
   \captionsetup{type=figure}
@@ -58,7 +58,7 @@ To provide an answer to these questions, an extensive literature was first perfo
 
 \section{Initial requirements analysis and selection}
 
-As customers should be able to write their own extensions, language popularity is an important factor. However, two other notable requirements were found as part of the literature review: memory safety and static typing. Memory safety issues are at the root of many security vulnerabilities, decisively ruling out memory unsafe languages such as C and C++. Static type systems on the other hand help avoid bugs, fix bugs more quickly, an serve as implicit documentation. This certainly makes statically typed languages more appealing candidates.
+As customers should be able to write their own extensions, language popularity is an important factor. However, two other notable requirements were found as part of the literature review: memory safety and static typing. Memory safety issues are at the root of many security vulnerabilities, decisively ruling out memory unsafe languages such as C and C++. Static type systems on the other hand help avoid bugs, fix bugs more quickly, and serve as implicit documentation. This certainly makes statically typed languages more appealing candidates.
 
 
 \begin{center}
